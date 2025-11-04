@@ -1,0 +1,33 @@
+{
+  "Celulares": {
+    "Teléfono Modelo A": {
+      "id": "d18d608b-e4d1-437d-8c7a-0e19f2184816",
+      "precio": 699.9,
+      "imagen": "ejemplo_telefono.jpg",
+      "stock_por_sucursal": {
+        "Sucursal Centro": 4,
+        "Sucursal Norte": 2
+      }
+    }
+  },
+  "Accesorios": {
+    "Funda Protectora": {
+      "id": "69a70f27-5595-4648-91a7-6ab5a8c0f8ca",
+      "precio": 19.9,
+      "imagen": "ejemplo_funda.jpg",
+      "stock_por_sucursal": {
+        "Sucursal Centro": 30,
+        "Sucursal Sur": 20
+      }
+    },
+    "Cargador Rápido 30W": {
+      "id": "4143534b-c26d-42ad-b1be-38e4fa89f7df",
+      "precio": 29.5,
+      "imagen": "ejemplo_cargador.jpg",
+      "stock_por_sucursal": {
+        "Sucursal Norte": 15,
+        "Sucursal Sur": 10
+      }
+    }
+  }
+}
