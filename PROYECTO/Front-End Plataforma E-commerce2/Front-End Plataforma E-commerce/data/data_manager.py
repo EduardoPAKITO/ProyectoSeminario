@@ -50,6 +50,7 @@ class DataManager:
                         "id": str(uuid.uuid4()),
                         "precio": 699.90,
                         "imagen": "ejemplo_telefono.jpg",
+                        "descripcion": "Teléfono modelo A con buenas prestaciones.",
                         "stock_por_sucursal": {"Sucursal Centro": 4, "Sucursal Norte": 2}
                     }
                 },
@@ -58,12 +59,14 @@ class DataManager:
                         "id": str(uuid.uuid4()),
                         "precio": 19.90,
                         "imagen": "ejemplo_funda.jpg",
+                        "descripcion": "Funda de silicona resistente.",
                         "stock_por_sucursal": {"Sucursal Centro": 30, "Sucursal Sur": 20}
                     },
                     "Cargador Rápido 30W": {
                         "id": str(uuid.uuid4()),
                         "precio": 29.50,
                         "imagen": "ejemplo_cargador.jpg",
+                        "descripcion": "Cargador rápido compatible con la mayoría de modelos.",
                         "stock_por_sucursal": {"Sucursal Norte": 15, "Sucursal Sur": 10}
                     }
                 }
@@ -81,12 +84,16 @@ class DataManager:
     @staticmethod
     def cargar_usuarios():
         usuarios = {}
+        if not os.path.exists(DataManager.RUTA_USUARIOS):
+            return usuarios
         with open(DataManager.RUTA_USUARIOS, newline="", encoding="utf-8") as f:
             reader = csv.DictReader(f)
             for fila in reader:
                 usuarios[fila["usuario"]] = {
-                    "clave": fila["clave"],
-                    "rol": fila["rol"]
+                    "clave": fila.get("clave", ""),
+                    "rol": fila.get("rol", "cliente"),
+                    "email": fila.get("email", "") or "",
+                    "nombre": fila.get("nombre", "") or ""
                 }
         return usuarios
 
@@ -94,22 +101,34 @@ class DataManager:
     def guardar_usuarios(dic_usuarios):
         with open(DataManager.RUTA_USUARIOS, "w", newline="", encoding="utf-8") as f:
             writer = csv.writer(f)
-            writer.writerow(["usuario", "clave", "rol"])
+            writer.writerow(["usuario", "clave", "rol", "email", "nombre"])
             for usuario, info in dic_usuarios.items():
-                writer.writerow([usuario, info["clave"], info["rol"]])
+                writer.writerow([usuario, info.get("clave",""), info.get("rol","cliente"),
+                                 info.get("email",""), info.get("nombre","")])
 
     @staticmethod
-    def crear_usuario_cliente(usuario, clave):
+    def crear_usuario_cliente(usuario, clave, email="", nombre=""):
         usuarios = DataManager.cargar_usuarios()
+        # Validar nombre de usuario y email únicos
         if usuario in usuarios:
             return False, "El usuario ya existe."
-        usuarios[usuario] = {"clave": clave, "rol": "cliente"}
+        # validar email duplicado
+        for u, info in usuarios.items():
+            if info.get("email") and email and info.get("email").lower() == email.lower():
+                return False, "El email ya está registrado."
+            if info.get("nombre") and nombre and info.get("nombre").strip().lower() == nombre.strip().lower() and u != usuario:
+                # previene crear varias cuentas con mismo nombre "visible"
+                return False, "Ya existe una cuenta con el mismo nombre."
+        usuarios[usuario] = {"clave": clave, "rol": "cliente", "email": email, "nombre": nombre}
         DataManager.guardar_usuarios(usuarios)
-        return True, "Usuario cliente creado correctamente."
+        return True, "Usuario creado correctamente."
+
 
     # Métodos para productos
     @staticmethod
     def cargar_productos():
+        if not os.path.exists(DataManager.RUTA_PRODUCTOS):
+            return {}
         with open(DataManager.RUTA_PRODUCTOS, "r", encoding="utf-8") as f:
             return json.load(f)
 
@@ -150,17 +169,22 @@ class DataManager:
         DataManager.guardar_productos(productos)
 
     @staticmethod
-    def agregar_producto(categoria, nombre, precio, imagen_archivo, stock_por_sucursal):
+    def agregar_producto(categoria, nombre, precio, imagen_archivo, stock_por_sucursal, descripcion=""):
         productos = DataManager.cargar_productos()
         if categoria not in productos:
             productos[categoria] = {}
+        # Validar si existe producto con el mismo nombre en esa categoría
+        if nombre in productos[categoria]:
+            return False, "El producto ya existe en esa categoría."
         productos[categoria][nombre] = {
             "id": str(uuid.uuid4()),
             "precio": float(precio),
             "imagen": imagen_archivo or "",
+            "descripcion": descripcion or "",
             "stock_por_sucursal": stock_por_sucursal or {}
         }
         DataManager.guardar_productos(productos)
+        return True, "Producto agregado."
 
     @staticmethod
     def eliminar_producto(categoria, nombre):
@@ -190,7 +214,7 @@ class DataManager:
                 return False, f"Stock insuficiente en {sucursal}. Disponible: {actual}"
             productos[categoria][nombre]["stock_por_sucursal"][sucursal] = actual - cantidad
             DataManager.guardar_productos(productos)
-            return True, "Compra registrada y stock actualizado."
+            return True, "Compra registrada."
         return False, "Producto no encontrado."
 
     # Métodos para ventas
@@ -214,6 +238,8 @@ class DataManager:
 
     @staticmethod
     def cargar_ventas():
+        if not os.path.exists(DataManager.RUTA_VENTAS):
+            return {}
         with open(DataManager.RUTA_VENTAS, "r", encoding="utf-8") as f:
             return json.load(f)
 
