@@ -1,4 +1,4 @@
-usuario,clave,rol
-admin,admin,admin
-cliente,cliente,cliente
-eduardo,1234,cliente
+usuario,clave,rol,email,nombre
+admin,admin,admin,,
+cliente,cliente,cliente,,
+rolo,1234,cliente,rolon@gmail.con,rolando arrueta
