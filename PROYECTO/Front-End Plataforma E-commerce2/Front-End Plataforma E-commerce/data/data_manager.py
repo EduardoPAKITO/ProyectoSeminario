@@ -33,12 +33,13 @@ class DataManager:
 
     @staticmethod
     def _asegurar_archivo_usuarios():
+        # ahora con columnas: usuario, clave, rol, email, nombre
         if not os.path.exists(DataManager.RUTA_USUARIOS):
             with open(DataManager.RUTA_USUARIOS, "w", newline="", encoding="utf-8") as f:
                 writer = csv.writer(f)
-                writer.writerow(["usuario", "clave", "rol"])
-                writer.writerow(["admin", "admin", "admin"])
-                writer.writerow(["cliente", "cliente", "cliente"])
+                writer.writerow(["usuario", "clave", "rol", "email", "nombre"])
+                writer.writerow(["admin", "admin", "admin", "admin@local", "Administrador"])
+                writer.writerow(["cliente", "cliente", "cliente", "cliente@local", "Cliente"])
 
     @staticmethod
     def _asegurar_productos_iniciales():
