@@ -6,10 +6,13 @@ from tkinter import ttk, messagebox, simpledialog, filedialog
 from PIL import Image, ImageTk
 import os
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # Directorio raíz del proyecto
+CARPETA_IMAGENES = os.path.join(BASE_DIR, "images")
+
 class AdminFrame(ctk.CTkFrame):
     def __init__(self, master, *args, **kwargs):
         super().__init__(master, *args, **kwargs)
-        self.image_folder = "images"
+        self.image_folder = CARPETA_IMAGENES
         if not os.path.exists(self.image_folder):
             os.makedirs(self.image_folder)
         self._construir()
