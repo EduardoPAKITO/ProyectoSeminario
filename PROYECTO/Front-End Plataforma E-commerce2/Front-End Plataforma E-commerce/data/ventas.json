@@ -1,0 +1,22 @@
+{
+  "eduardo": [
+    {
+      "categoria": "Celulares",
+      "producto": "Teléfono Modelo A",
+      "cantidad": 1,
+      "sucursal": "Sucursal Centro",
+      "metodo_pago": "contado",
+      "total": 699.9,
+      "fecha": "2025-11-06 21:00:59"
+    },
+    {
+      "categoria": "Celulares",
+      "producto": "Teléfono Modelo A",
+      "cantidad": 1,
+      "sucursal": "Sucursal Centro",
+      "metodo_pago": "contado",
+      "total": 699.9,
+      "fecha": "2025-11-06 21:09:46"
+    }
+  ]
+}

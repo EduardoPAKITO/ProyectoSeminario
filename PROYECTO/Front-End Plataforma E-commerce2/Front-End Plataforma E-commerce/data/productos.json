@@ -5,7 +5,7 @@
       "precio": 699.9,
       "imagen": "samsung a56.jpg",
       "stock_por_sucursal": {
-        "Sucursal Centro": 3,
+        "Sucursal Centro": 0,
         "Sucursal Norte": 1,
         "Sucursal Sur": 0
       }
