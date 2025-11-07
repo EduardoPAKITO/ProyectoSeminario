@@ -1,9 +1,6 @@
 # main.py
 import customtkinter as ctk
-from ui.login_frame import LoginFrame
-from ui.cliente_frame import ClienteFrame
-from ui.admin_frame import AdminFrame
-from ui.perfil_frame import PerfilFrame
+from ui import LoginFrame, ClienteFrame, AdminFrame, PerfilFrame
 from data.data_manager import DataManager
 import os
 
