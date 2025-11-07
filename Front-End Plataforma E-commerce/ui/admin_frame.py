@@ -36,7 +36,7 @@ class AdminFrame(ctk.CTkFrame):
         self.usuarios_box.pack(fill="both", expand=False, padx=6, pady=6)
         btns_u = ctk.CTkFrame(izquierda)
         btns_u.pack(fill="x", padx=6, pady=6)
-        ctk.CTkButton(btns_u, text="Agregar cliente", command=self.agregar_cliente).pack(side="left", padx=6)
+        # SE QUITA boton Agregar cliente 
         ctk.CTkButton(btns_u, text="Eliminar usuario", command=self.eliminar_usuario).pack(side="left", padx=6)
         ctk.CTkButton(btns_u, text="Refrescar", command=self.refrescar_usuarios).pack(side="right", padx=6)
 
@@ -74,7 +74,7 @@ class AdminFrame(ctk.CTkFrame):
         self.usuarios_box.configure(state="normal")
         self.usuarios_box.delete("0.0", "end")
         for u, info in usuarios.items():
-            self.usuarios_box.insert("end", f"{u} - {info.get('rol')}\n")
+            self.usuarios_box.insert("end", f"{u} - {info.get('rol')} - {info.get('email','')}\n")
         self.usuarios_box.configure(state="disabled")
 
     def refrescar_productos(self):
@@ -86,7 +86,12 @@ class AdminFrame(ctk.CTkFrame):
             for nombre, datos in lista.items():
                 suc_info = ", ".join([f"{s}:{c}" for s, c in datos.get("stock_por_sucursal", {}).items()])
                 img = datos.get("imagen", "")
+                desc = datos.get("descripcion", "")
+                # mejor separación: linea por producto + descripción corta
                 self.productos_box.insert("end", f"{nombre} - ${datos.get('precio'):.2f} - [{suc_info}] - img:{img}\n")
+                if desc:
+                    self.productos_box.insert("end", f"    Desc: {desc}\n")
+                self.productos_box.insert("end", "\n")
         self.productos_box.configure(state="disabled")
 
     def refrescar_sucursales(self):
@@ -99,22 +104,6 @@ class AdminFrame(ctk.CTkFrame):
         self.sucursales_box.configure(state="disabled")
 
     # Usuarios
-    def agregar_cliente(self):
-        usuario = simpledialog.askstring("Agregar cliente", "Usuario:", parent=self)
-        if not usuario:
-            return
-        clave = simpledialog.askstring("Agregar cliente", "Contraseña:", parent=self, show="*")
-        if not clave:
-            return
-        usuarios = DataManager.cargar_usuarios()
-        if usuario in usuarios:
-            messagebox.showerror("Error", "El usuario ya existe.")
-            return
-        usuarios[usuario] = {"clave": clave, "rol": "cliente"}
-        DataManager.guardar_usuarios(usuarios)
-        messagebox.showinfo("OK", "Cliente agregado.")
-        self.refrescar_usuarios()
-
     def eliminar_usuario(self):
         usuario = simpledialog.askstring("Eliminar usuario", "Usuario a eliminar:", parent=self)
         if not usuario:
@@ -134,7 +123,7 @@ class AdminFrame(ctk.CTkFrame):
         messagebox.showinfo("OK", "Usuario eliminado.")
         self.refrescar_usuarios()
 
-    # Sucursales
+    # Sucursales 
     def agregar_sucursal_dialog(self):
         nombre = simpledialog.askstring("Agregar sucursal", "Nombre de la nueva sucursal:", parent=self)
         if not nombre:
@@ -203,6 +192,10 @@ class AdminFrame(ctk.CTkFrame):
         entry_stock = ttk.Entry(top, font="arial 12 bold")
         entry_stock.place(x=120, y=180, width=250, height=30)
 
+        tk.Label(top, text="Descripcion: ", font="arial 12 bold", bg="#C6D9E3").place(x=20, y=220, width=100, height=25)
+        entry_desc = ttk.Entry(top, font="arial 12 bold")
+        entry_desc.place(x=120, y=220, width=250, height=30)
+
         self.frameimg = tk.Frame(top, bg="white", highlightbackground="gray", highlightthickness=1)
         self.frameimg.place(x=440, y=30, width=200, height=200)
 
@@ -210,20 +203,21 @@ class AdminFrame(ctk.CTkFrame):
         btnimage.place(x=470, y=260, width=150, height=40)
 
         def guardar():
-            categoria = entry_categoria.get()
-            precio = entry_precio.get()
-            stock = entry_stock.get()
-            nombre = entry_nombre.get()
+            categoria = entry_categoria.get().strip()
+            precio = entry_precio.get().strip()
+            stock = entry_stock.get().strip()
+            nombre = entry_nombre.get().strip()
+            sucursal = entry_sucursal.get().strip()
+            descripcion = entry_desc.get().strip()
 
-            if not categoria or not precio or not stock or not nombre:
-                messagebox.showerror ("Error", "Todos los campos deben ser completados")
+            if not categoria or not precio or not nombre:
+                messagebox.showerror ("Error", "Categoria, precio y nombre son obligatorios")
                 return
             
             try:
                 precio = float (precio)
-                stock = int(stock)
             except ValueError:
-                messagebox. showerror ("Error", "precio y stock deben ser numeros validos")
+                messagebox. showerror ("Error", "precio debe ser un numero valido")
                 return
             
             if hasattr(self, 'image_path'):
@@ -232,7 +226,23 @@ class AdminFrame(ctk.CTkFrame):
                 image_path = (r"default.jpg")
 
             stock_por_sucursal = {}
-            DataManager.agregar_producto(categoria, nombre, precio, image_path or "", stock_por_sucursal)
+            if sucursal:
+                # validar que sucursal exista EN EL SISTEMA
+                sucursales_existentes = DataManager.obtener_sucursales()
+                if sucursal not in sucursales_existentes:
+                    messagebox.showerror("Error", f"La sucursal '{sucursal}' no existe. Primero crea la sucursal.")
+                    return
+                try:
+                    stock_val = int(stock) if stock else 0
+                except Exception:
+                    messagebox.showerror("Error", "Stock debe ser un número entero.")
+                    return
+                stock_por_sucursal[sucursal] = stock_val
+
+            ok, mensaje = DataManager.agregar_producto(categoria, nombre, precio, image_path or "", stock_por_sucursal, descripcion=descripcion)
+            if not ok:
+                messagebox.showerror("Error", mensaje)
+                return
             messagebox.showinfo("OK", "Producto agregado.")
             top. destroy()
             self.refrescar_productos()
@@ -240,9 +250,6 @@ class AdminFrame(ctk.CTkFrame):
 
         tk.Button(top, text="Guardar", font="arial 12 bold", command=guardar).place(x=50, y=260, width=150, height=40)
         tk.Button(top, text="Cancelar", font="arial 12 bold", command=top.destroy).place(x=260, y=260, width=150, height=40)
-
-                
-
 
     def agregar_producto_dialog(self):
         categoria = simpledialog.askstring("Categoria", "Categoria (Celulares o Accesorios):", parent=self)
@@ -264,11 +271,21 @@ class AdminFrame(ctk.CTkFrame):
             for parte in stock_txt.split(","):
                 if ":" in parte:
                     s, c = parte.split(":", 1)
+                    s = s.strip()
+                    c = c.strip()
+                    # validar sucursal existente
+                    sucursales_existentes = DataManager.obtener_sucursales()
+                    if s not in sucursales_existentes:
+                        messagebox.showerror("Error", f"La sucursal '{s}' no existe. Crea la sucursal primero.")
+                        return
                     try:
-                        stock_por_sucursal[s.strip()] = int(c.strip())
+                        stock_por_sucursal[s] = int(c)
                     except Exception:
-                        stock_por_sucursal[s.strip()] = 0
-        DataManager.agregar_producto(categoria, nombre, precio_f, imagen or "", stock_por_sucursal)
+                        stock_por_sucursal[s] = 0
+        ok, mensaje = DataManager.agregar_producto(categoria, nombre, precio_f, imagen or "", stock_por_sucursal)
+        if not ok:
+            messagebox.showerror("Error", mensaje)
+            return
         messagebox.showinfo("OK", "Producto agregado.")
         self.refrescar_productos()
         self.refrescar_sucursales()
@@ -280,6 +297,11 @@ class AdminFrame(ctk.CTkFrame):
             return
         sucursal = simpledialog.askstring("Sucursal", "Sucursal a modificar:", parent=self)
         if not sucursal:
+            return
+        # validar sucursal
+        sucursales_existentes = DataManager.obtener_sucursales()
+        if sucursal not in sucursales_existentes:
+            messagebox.showerror("Error", f"La sucursal '{sucursal}' no existe.")
             return
         nuevo = simpledialog.askinteger("Nuevo stock", f"Nuevo stock para {nombre} en {sucursal}:", parent=self, minvalue=0)
         if nuevo is None:

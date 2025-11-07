@@ -3,5 +3,6 @@ from .login_frame import LoginFrame
 from .cliente_frame import ClienteFrame
 from .admin_frame import AdminFrame
 from .perfil_frame import PerfilFrame
+from .carrito_frame import CarritoFrame
 
-__all__ = ['LoginFrame', 'ClienteFrame', 'AdminFrame', 'PerfilFrame']
+__all__ = ['LoginFrame', 'ClienteFrame', 'AdminFrame', 'PerfilFrame', 'CarritoFrame']

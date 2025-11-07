@@ -28,7 +28,7 @@ class LoginFrame(ctk.CTkFrame):
         separador = ctk.CTkLabel(self, text="— ¿No tienes cuenta? —")
         separador.grid(row=4, column=0, columnspan=3, pady=(10,4))
 
-        boton_registro = ctk.CTkButton(self, text="Crear cuenta (cliente)", command=self.crear_cuenta_cliente)
+        boton_registro = ctk.CTkButton(self, text="Crear cuenta", command=self.crear_cuenta_cliente)
         boton_registro.grid(row=5, column=0, columnspan=3, pady=(6,20))
 
     def intent_login(self):
@@ -50,10 +50,16 @@ class LoginFrame(ctk.CTkFrame):
         usuario = simpledialog.askstring("Crear cuenta", "Nombre de usuario:", parent=self)
         if not usuario:
             return
+        email = simpledialog.askstring("Crear cuenta", "Email:", parent=self)
+        if not email:
+            return
+        nombre = simpledialog.askstring("Crear cuenta", "Nombre completo:", parent=self)
+        if not nombre:
+            return
         clave = simpledialog.askstring("Crear cuenta", "Contraseña:", parent=self, show="*")
         if not clave:
             return
-        ok, msg = DataManager.crear_usuario_cliente(usuario, clave)
+        ok, msg = DataManager.crear_usuario_cliente(usuario, clave, email=email, nombre=nombre)
         if ok:
             messagebox.showinfo("Cuenta creada", msg)
         else:
