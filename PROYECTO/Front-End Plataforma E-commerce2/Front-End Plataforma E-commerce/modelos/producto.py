@@ -7,7 +7,7 @@ class Producto:
         self.imagen = imagen
         self.stock_por_sucursal = stock_por_sucursal
 
-    def to_dict(self):
+    def to_dict(self): #Convierte el objeto Producto a diccionario para almacenamiento.
         return {
             "id": self.id,
             "precio": self.precio,
@@ -16,7 +16,7 @@ class Producto:
         }
 
     @classmethod
-    def from_dict(cls, nombre, categoria, data):
+    def from_dict(cls, nombre, categoria, data): #Crea un objeto Producto desde datos almacenados.
         return cls(
             data["id"],
             nombre,
