@@ -6,6 +6,15 @@ from datetime import datetime
 
 class DataManager:
     # Rutas CORREGIDAS - relativas al directorio del proyecto
+    """""
+    Atributos de Clase:
+        BASE_DIR (str): Directorio raíz del proyecto
+        DATA_DIR (str): Directorio de archivos de datos
+        RUTA_USUARIOS (str): Ruta al archivo CSV de usuarios
+        RUTA_PRODUCTOS (str): Ruta al archivo JSON de productos
+        RUTA_VENTAS (str): Ruta al archivo JSON de ventas
+        CARPETA_IMAGENES (str): Ruta a la carpeta de imágenes
+    """""
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # Directorio raíz del proyecto
     DATA_DIR = os.path.join(BASE_DIR, "data")
     RUTA_USUARIOS = os.path.join(DATA_DIR, "usuarios.csv")
