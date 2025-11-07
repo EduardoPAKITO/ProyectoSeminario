@@ -1,16 +1,14 @@
 # main.py
 import customtkinter as ctk
-from login_frame import LoginFrame
-from cliente_frame import ClienteFrame
-from admin_frame import AdminFrame
-from perfil_frame import PerfilFrame
-from usuarios_manager import asegurar_archivo_usuarios, cargar_usuarios
-from productos_manager import asegurar_productos_iniciales
+from ui.login_frame import LoginFrame
+from ui.cliente_frame import ClienteFrame
+from ui.admin_frame import AdminFrame
+from ui.perfil_frame import PerfilFrame
+from data.data_manager import DataManager
 import os
 
 # Inicializar archivos si faltan
-asegurar_archivo_usuarios()
-asegurar_productos_iniciales()
+DataManager.asegurar_archivos()
 
 ctk.set_appearance_mode("Dark")  # modo claro
 ctk.set_default_color_theme("green")
@@ -112,8 +110,5 @@ class App(ctk.CTk):
         return self.usuario_actual
 
 if __name__ == "__main__":
-    # crear carpetas necesarias
-    os.makedirs("images", exist_ok=True)
-    os.makedirs("data", exist_ok=True)
     app = App()
     app.mainloop()
