@@ -1,4 +1,4 @@
-# admin_frame.py dasdas
+# admin_frame.py
 import tkinter as tk
 import customtkinter as ctk
 from productos_manager import cargar_productos, guardar_productos, agregar_sucursal, eliminar_sucursal, agregar_producto, eliminar_producto, actualizar_stock, obtener_sucursales
