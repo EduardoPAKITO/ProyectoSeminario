@@ -4,9 +4,12 @@ import customtkinter as ctk
 from data.data_manager import DataManager
 from tkinter import messagebox
 from PIL import Image, ImageTk
+from customtkinter import CTkImage
 import os
 
-CARPETA_IMAGENES = "images"
+#CARPETA_IMAGENES = "images"
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # Directorio raíz del proyecto
+CARPETA_IMAGENES = os.path.join(BASE_DIR, "images")
 
 class ClienteFrame(ctk.CTkFrame):
     def __init__(self, master, funcion_get_usuario, *args, **kwargs):
@@ -132,12 +135,31 @@ class ClienteFrame(ctk.CTkFrame):
         # Imagen
         if imagen_path and os.path.exists(imagen_path):
             try:
+                # 1. Abre la imagen de PIL
+                pil_image = Image.open(imagen_path)
+
+                # 2. Crea el objeto CTkImage. 
+                #    CustomTkinter maneja el tamaño, pero puedes usar size=(ancho, alto) si quieres especificarlo.
+                #    Normalmente, le pasas la imagen de PIL abierta.
+                ctk_image_obj = CTkImage(
+                    light_image=pil_image, # Imagen para modo claro (o la misma para ambos)
+                    dark_image=pil_image,  # Imagen para modo oscuro (o la misma para ambos)
+                    size=(150, 150)        # Tamaño deseado
+                )
+
+                # 3. Pasa el objeto CTkImage al CTkLabel
+                img_label = ctk.CTkLabel(article_frame, image=ctk_image_obj, text="")
+
+                # Ya no necesitas hacer img_label.image = ... porque CTkImage lo maneja.
+                img_label.pack(expand=True, fill="both", pady=(4, 2))
+                """                
                 image = Image.open(imagen_path)
                 image = image.resize((150, 150), Image.LANCZOS)
                 img_tk = ImageTk.PhotoImage(image)
                 img_label = ctk.CTkLabel(article_frame, image=img_tk, text="")
                 img_label.image = img_tk  # mantener referencia
                 img_label.pack(expand=True, fill="both", pady=(4, 2))
+                """
             except Exception:
                 ctk.CTkLabel(article_frame, text="(Error cargando imagen)", text_color="gray").pack()
 

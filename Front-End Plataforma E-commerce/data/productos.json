@@ -1,0 +1,80 @@
+{
+  "Celulares": {
+    "Teléfono Modelo A": {
+      "id": "1879559c-9fcc-440d-bb28-e9a49781f512",
+      "precio": 699.9,
+      "imagen": "samsung a56.jpg",
+      "stock_por_sucursal": {
+        "Sucursal Centro": 0,
+        "Sucursal Norte": 1,
+        "Sucursal Sur": 0
+      }
+    },
+    "samsung a56.jpg": {
+      "id": "ea66e508-8dd2-43a8-a6df-6ae47c3c6521",
+      "precio": 650000.0,
+      "imagen": "default.jpg",
+      "stock_por_sucursal": {
+        "Sucursal Norte": 10
+      }
+    },
+    "Samsung S24 ": {
+      "id": "dd49b7a2-7045-4df0-8322-21b26a3c1d47",
+      "precio": 1000000.0,
+      "imagen": "default.jpg",
+      "stock_por_sucursal": {
+        "Sucursal Centro": 9
+      }
+    },
+    "Teléfono Modelo B": {
+      "id": "1879559c-9fcc-440d-bb28-e9a49781f512",
+      "precio": 699.9,
+      "imagen": "default.jpg",
+      "stock_por_sucursal": {
+        "Sucursal Centro": 3,
+        "Sucursal Norte": 1,
+        "Sucursal Sur": 0
+      }
+    },
+    "Teléfono Modelo C": {
+      "id": "1879559c-9fcc-440d-bb28-e9a49781f512",
+      "precio": 699.9,
+      "imagen": "default.jpg",
+      "stock_por_sucursal": {
+        "Sucursal Centro": 3,
+        "Sucursal Norte": 1,
+        "Sucursal Sur": 0
+      }
+    },
+    "Teléfono Modelo D": {
+      "id": "1879559c-9fcc-440d-bb28-e9a49781f512",
+      "precio": 699.9,
+      "imagen": "default.jpg",
+      "stock_por_sucursal": {
+        "Sucursal Centro": 3,
+        "Sucursal Norte": 1,
+        "Sucursal Sur": 0
+      }
+    }
+  },
+  "Accesorios": {
+    "Funda Protectora": {
+      "id": "f1cf0d70-7a45-42e9-bcfa-2d742293a836",
+      "precio": 19.9,
+      "imagen": "default2.png",
+      "stock_por_sucursal": {
+        "Sucursal Centro": 30,
+        "Sucursal Sur": 20
+      }
+    },
+    "Cargador Rápido 30W": {
+      "id": "e874ccc8-9647-4121-a3c7-3cad45f28d55",
+      "precio": 29.5,
+      "imagen": "default2.png",
+      "stock_por_sucursal": {
+        "Sucursal Norte": 5,
+        "Sucursal Sur": 0
+      }
+    }
+  }
+}
