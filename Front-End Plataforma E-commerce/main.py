@@ -13,7 +13,7 @@ ctk.set_default_color_theme("green")
 class App(ctk.CTk):
     def __init__(self):
         super().__init__()
-        self.title("Front-End Plataforma E-commerce")
+        self.title("Tienda - Celulares y Accesorios")
         self.geometry("1100x700")
         self.minsize(900, 600)
 
@@ -27,7 +27,7 @@ class App(ctk.CTk):
         # header
         header = ctk.CTkFrame(self)
         header.pack(fill="x", padx=8, pady=6)
-        self.lbl_titulo = ctk.CTkLabel(header, text="Tienda - Celulares y Accesorios", font=ctk.CTkFont(size=18, weight="bold"))
+        self.lbl_titulo = ctk.CTkLabel(header, text="Tienda - Los Pibes del Seminario", font=ctk.CTkFont(size=18, weight="bold"))
         self.lbl_titulo.pack(side="left", padx=8)
         self.lbl_sesion = ctk.CTkLabel(header, text="No conectado")
         self.lbl_sesion.pack(side="left", padx=8)
@@ -61,7 +61,7 @@ class App(ctk.CTk):
         self.tabview = ctk.CTkTabview(self.contenedor_principal)
         self.tabview.pack(fill="both", expand=True)
         # Siempre: Catálogo; si cliente: Carrito y Mi Perfil; si admin: Administracion
-        self.tabview.add("Catálogo y Compra")
+        self.tabview.add("Catálogo")
         if rol != "admin":
             self.tabview.add("Carrito")
             self.tabview.add("Mi Perfil")
@@ -71,9 +71,9 @@ class App(ctk.CTk):
         # Instanciar frames dentro de pestañas
         # pasar callback para agregar al carrito a ClienteFrame
         if rol == "admin":
-            self.frame_cliente = ClienteFrame(self.tabview.tab("Catálogo y Compra"), self.get_usuario_actual, add_to_cart_callback=None, role="admin")
+            self.frame_cliente = ClienteFrame(self.tabview.tab("Catálogo"), self.get_usuario_actual, add_to_cart_callback=None, role="admin")
         else:
-            self.frame_cliente = ClienteFrame(self.tabview.tab("Catálogo y Compra"), self.get_usuario_actual, add_to_cart_callback=self.agregar_al_carrito, role="cliente")
+            self.frame_cliente = ClienteFrame(self.tabview.tab("Catálogo"), self.get_usuario_actual, add_to_cart_callback=self.agregar_al_carrito, role="cliente")
         self.frame_cliente.pack(fill="both", expand=True)
 
         if rol != "admin":
