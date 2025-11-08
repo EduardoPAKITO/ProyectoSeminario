@@ -250,7 +250,7 @@ class AdminFrame(ctk.CTkFrame):
 
         tk.Button(top, text="Guardar", font="arial 12 bold", command=guardar).place(x=50, y=260, width=150, height=40)
         tk.Button(top, text="Cancelar", font="arial 12 bold", command=top.destroy).place(x=260, y=260, width=150, height=40)
-
+    #ESTE ESTA DE GANAS NO? Porque el que funciona es el otro
     def agregar_producto_dialog(self):
         categoria = simpledialog.askstring("Categoria", "Categoria (Celulares o Accesorios):", parent=self)
         if not categoria:
@@ -276,7 +276,7 @@ class AdminFrame(ctk.CTkFrame):
                     # validar sucursal existente
                     sucursales_existentes = DataManager.obtener_sucursales()
                     if s not in sucursales_existentes:
-                        messagebox.showerror("Error", f"La sucursal '{s}' no existe. Crea la sucursal primero.")
+                        messagebox.showerror("Error", f"La sucursal '{s}' no existe.")
                         return
                     try:
                         stock_por_sucursal[s] = int(c)
