@@ -39,7 +39,6 @@ class LoginFrame(ctk.CTkFrame):
             return
         usuarios = DataManager.cargar_usuarios()
         info = usuarios.get(usuario) #Busca por la clave y devuelve su valor (xq es un diccionario)
-        print(info)
         if not info or info.get("clave") != clave:
             messagebox.showerror("Error", "Usuario o clave incorrectos.")
             return
