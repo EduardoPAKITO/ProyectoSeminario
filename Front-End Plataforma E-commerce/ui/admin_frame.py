@@ -45,8 +45,8 @@ class AdminFrame(ctk.CTkFrame):
         self.sucursales_box.pack(fill="both", padx=6, pady=6)
         btns_s = ctk.CTkFrame(izquierda)
         btns_s.pack(fill="x", padx=6, pady=6)
-        ctk.CTkButton(btns_s, text="Agregar sucursal", command=self.agregar_sucursal_dialog).pack(side="left", padx=6)
-        ctk.CTkButton(btns_s, text="Eliminar sucursal", command=self.eliminar_sucursal_dialog).pack(side="left", padx=6)
+        ctk.CTkButton(btns_s, text="Agregar sucursal", command=self.agregar_sucursal).pack(side="left", padx=6)
+        ctk.CTkButton(btns_s, text="Eliminar sucursal", command=self.eliminar_sucursal).pack(side="left", padx=6)
         ctk.CTkButton(btns_s, text="Refrescar", command=self.refrescar_sucursales).pack(side="right", padx=6)
 
         # Derecha: productos (separados por categoría)
@@ -105,42 +105,122 @@ class AdminFrame(ctk.CTkFrame):
 
     # Usuarios
     def eliminar_usuario(self):
-        usuario = simpledialog.askstring("Eliminar usuario", "Usuario a eliminar:", parent=self)
-        if not usuario:
-            return
-        usuarios = DataManager.cargar_usuarios()
-        if usuario not in usuarios:
-            messagebox.showerror("Error", "Usuario no encontrado.")
-            return
-        if usuarios[usuario].get("rol") == "admin":
-            messagebox.showwarning("Protegido", "No se puede eliminar al administrador.")
-            return
-        confirm = messagebox.askyesno("Confirmar", f"Eliminar usuario {usuario}?")
-        if not confirm:
-            return
-        del usuarios[usuario]
-        DataManager.guardar_usuarios(usuarios)
-        messagebox.showinfo("OK", "Usuario eliminado.")
-        self.refrescar_usuarios()
+        top = ctk.CTkToplevel(self)
+        top.title("Eliminar Sucursal")
+        top.geometry("700x300+200+50")
+        top.resizable(False, False)
+
+        top.transient(self.master)
+        top.grab_set()
+        top.focus_set()
+        top.lift()
+
+        tk.Label(top, text="Email:", font="arial 12 bold", fg="white", bg=top["bg"]).place(x=150, y=100, width=80, height=25)
+        entry_email = ttk.Entry(top, font="arial 12 bold")
+        entry_email.place(x=260, y=100, width=250, height=30)
+
+        def eliminar():
+            email = entry_email.get().strip()
+            if not email:
+                messagebox.showerror("Error", "Debe completar el campo de email.")
+                return
+
+            usuarios = DataManager.cargar_usuarios()
+
+            # Buscar usuario por email
+            usuario_encontrado = None
+            for usuario, datos in usuarios.items():
+                if datos.get("email") == email:
+                    usuario_encontrado = usuario
+                    break
+
+            if not usuario_encontrado:
+                messagebox.showerror("Error", "Usuario no encontrado.")
+                return
+
+            if datos.get("rol") == "admin":
+                messagebox.showwarning("Protegido", "No se puede eliminar al administrador.")
+                return
+
+            confirm = messagebox.askyesno("Confirmar", f"¿Eliminar usuario '{datos.get('nombre')}' ({email})?")
+            if not confirm:
+                return
+
+            del usuarios[usuario_encontrado]
+            DataManager.guardar_usuarios(usuarios)
+            messagebox.showinfo("OK", f"Usuario '{datos.get('nombre')}' eliminado correctamente.")
+            top.destroy()
+            self.refrescar_usuarios()
+        
+        tk.Button(top, text="Eliminar", font="arial 12 bold", command=eliminar, fg="white", bg="#2E8B64").place(x=150, y=180, width=150, height=40)
+        tk.Button(top, text="Cancelar", font="arial 12 bold", command=top.destroy, fg="white", bg="#2E8B64").place(x=350, y=180, width=150, height=40)
 
     # Sucursales 
-    def agregar_sucursal_dialog(self):
-        nombre = simpledialog.askstring("Agregar sucursal", "Nombre de la nueva sucursal:", parent=self)
-        if not nombre:
-            return
-        DataManager.agregar_sucursal(nombre)
-        messagebox.showinfo("OK", "Sucursal agregada (stock inicial 0 en productos).")
-        self.refrescar_sucursales()
-        self.refrescar_productos()
+    def agregar_sucursal(self):
+        top = ctk.CTkToplevel(self)
+        top.title("Agregar Sucursal")
+        top.geometry("700x300+200+50")
+        top.resizable(False, False)
 
-    def eliminar_sucursal_dialog(self):
-        nombre = simpledialog.askstring("Eliminar sucursal", "Nombre de la sucursal a eliminar:", parent=self)
-        if not nombre:
-            return
-        DataManager.eliminar_sucursal(nombre)
-        messagebox.showinfo("OK", "Sucursal eliminada de todos los productos.")
-        self.refrescar_sucursales()
-        self.refrescar_productos()
+        top.transient(self.master)
+        top.grab_set()
+        top.focus_set()
+        top.lift()
+
+        tk.Label(top, text="Nombre:", font="arial 12 bold", fg="white", bg=top["bg"]).place(x=150, y=100, width=80, height=25)
+        entry_nombre = ttk.Entry(top, font="arial 12 bold")
+        entry_nombre.place(x=260, y=100, width=250, height=30)
+
+        def agregar():
+            nombre = entry_nombre.get()
+            if not nombre:
+                messagebox.showerror ("Error", "Debe completar el campo")
+                return
+
+            ok = DataManager.agregar_sucursal(nombre)
+            if not ok:
+                messagebox.showinfo("OK", "Sucursal agregada (stock inicial 0 en productos).")
+                top. destroy()
+                self.refrescar_productos()
+                self.refrescar_sucursales()
+            else:
+                messagebox.showerror("Error", "Ya existe la sucursal.")
+
+        tk.Button(top, text="Guardar", font="arial 12 bold", command=agregar, fg="white", bg="#2E8B64").place(x=150, y=180, width=150, height=40)
+        tk.Button(top, text="Cancelar", font="arial 12 bold", command=top.destroy, fg="white", bg="#2E8B64").place(x=350, y=180, width=150, height=40)
+
+    def eliminar_sucursal(self):
+        top = ctk.CTkToplevel(self)
+        top.title("Eliminar Sucursal")
+        top.geometry("700x300+200+50")
+        top.resizable(False, False)
+
+        top.transient(self.master)
+        top.grab_set()
+        top.focus_set()
+        top.lift()
+
+        tk.Label(top, text="Nombre:", font="arial 12 bold", fg="white", bg=top["bg"]).place(x=150, y=100, width=80, height=25)
+        entry_nombre = ttk.Entry(top, font="arial 12 bold")
+        entry_nombre.place(x=260, y=100, width=250, height=30)
+
+        def eliminar():
+            nombre = entry_nombre.get()
+            if not nombre:
+                messagebox.showerror ("Error", "Debe completar el campo")
+                return
+            
+            ok = DataManager.eliminar_sucursal(nombre)
+            if ok:
+                messagebox.showinfo("OK", "Sucursal eliminada de todos los productos.")
+                top. destroy()
+                self.refrescar_productos()
+                self.refrescar_sucursales()
+            else:
+                messagebox.showerror("Error", "No se encontró la sucursal.")
+
+        tk.Button(top, text="Eliminar", font="arial 12 bold", command=eliminar, fg="white", bg="#2E8B64").place(x=150, y=180, width=150, height=40)
+        tk.Button(top, text="Cancelar", font="arial 12 bold", command=top.destroy, fg="white", bg="#2E8B64").place(x=350, y=180, width=150, height=40)
 
     # Productos
     def load_image(self):

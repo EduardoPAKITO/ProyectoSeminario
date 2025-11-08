@@ -65,17 +65,6 @@
         "Sucursal Norte": 1,
         "Sucursal Sur": 0
       }
-    },
-    "fadas": {
-      "id": "8256993b-28c4-4f3f-8b7c-07c786f118fe",
-      "precio": 152165.0,
-      "imagen": "default.jpg",
-      "descripcion": "dadadasdas",
-      "stock_por_sucursal": {
-        "Sucursal Centro": 0,
-        "Sucursal Norte": 0,
-        "Sucursal Sur": 0
-      }
     }
   },
   "Accesorios": {
@@ -98,17 +87,6 @@
       "stock_por_sucursal": {
         "Sucursal Centro": 3,
         "Sucursal Norte": 1,
-        "Sucursal Sur": 0
-      }
-    },
-    "dadas": {
-      "id": "cab3ebf8-80c0-4bec-b09f-bf8fe78dbb23",
-      "precio": 1520.0,
-      "imagen": "default2.png",
-      "descripcion": "dadas",
-      "stock_por_sucursal": {
-        "Sucursal Centro": 0,
-        "Sucursal Norte": 0,
         "Sucursal Sur": 0
       }
     }

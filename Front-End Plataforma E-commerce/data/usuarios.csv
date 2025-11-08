@@ -2,4 +2,3 @@ usuario,clave,rol,email,nombre
 admin,admin,admin,,
 cliente,cliente,cliente,,
 eduardo,1234,cliente,,
-rolo,1234,cliente,rolon@gmail.com,rolando arrueta

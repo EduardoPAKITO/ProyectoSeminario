@@ -16,8 +16,7 @@ class DataManager:
         RUTA_VENTAS (str): Ruta al archivo JSON de ventas
         CARPETA_IMAGENES (str): Ruta a la carpeta de imágenes
     """""
-    BASE_DIR = os.path.dirname(os.path.dirname(
-        os.path.abspath(__file__)))  # Directorio raíz del proyecto
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # Directorio raíz del proyecto
     DATA_DIR = os.path.join(BASE_DIR, "data")
     RUTA_USUARIOS = os.path.join(DATA_DIR, "usuarios.csv")
     RUTA_PRODUCTOS = os.path.join(DATA_DIR, "productos.json")
@@ -163,6 +162,12 @@ class DataManager:
     @staticmethod
     def agregar_sucursal(nueva_sucursal):
         productos = DataManager.cargar_productos()
+        # Verificar si la sucursal ya existe en algún producto
+        for categoria, lista in productos.items():
+            for nombre, datos in lista.items():
+                if "stock_por_sucursal" in datos and nueva_sucursal in datos["stock_por_sucursal"]:
+                    return True
+
         for categoria, lista in productos.items():
             for nombre, datos in lista.items():
                 if "stock_por_sucursal" not in datos:
@@ -170,15 +175,27 @@ class DataManager:
                 if nueva_sucursal not in datos["stock_por_sucursal"]:
                     datos["stock_por_sucursal"][nueva_sucursal] = 0
         DataManager.guardar_productos(productos)
+        return False
 
     @staticmethod
     def eliminar_sucursal(sucursal):
+        existe = False
         productos = DataManager.cargar_productos()
+        # Verificar si la sucursal ya existe en algún producto
         for categoria, lista in productos.items():
             for nombre, datos in lista.items():
                 if "stock_por_sucursal" in datos and sucursal in datos["stock_por_sucursal"]:
-                    del datos["stock_por_sucursal"][sucursal]
-        DataManager.guardar_productos(productos)
+                    existe = True
+                    break
+        if existe:       
+            for categoria, lista in productos.items():
+                for nombre, datos in lista.items():
+                    if "stock_por_sucursal" in datos and sucursal in datos["stock_por_sucursal"]:
+                        del datos["stock_por_sucursal"][sucursal]
+            DataManager.guardar_productos(productos)
+            return True
+        else:
+            return False
 
     @staticmethod
     def agregar_producto(categoria, nombre, precio, imagen_archivo, stock_por_sucursal, descripcion):
@@ -202,6 +219,20 @@ class DataManager:
     def eliminar_producto(categoria, nombre):
         productos = DataManager.cargar_productos()
         if categoria in productos and nombre in productos[categoria]:
+            producto = productos[categoria][nombre]
+            # Verificar si tiene imagen asociada
+            image_path = producto.get("imagen", "")
+            if image_path:
+                nombre_imagen = os.path.basename(image_path) # Obtener solo el nombre del archivo
+                if nombre_imagen not in ("default.jpg", "default2.png"): # No borrar si es una de las imágenes por defecto
+                    ruta_imagen = os.path.join(DataManager.CARPETA_IMAGENES, nombre_imagen)
+                    # Borrar el archivo solo si realmente existe
+                    if os.path.exists(ruta_imagen):
+                        try:
+                            os.remove(ruta_imagen)
+                        except Exception as e:
+                            print(f"No se pudo eliminar la imagen '{ruta_imagen}': {e}")
+            # Eliminar el producto del diccionario
             del productos[categoria][nombre]
             DataManager.guardar_productos(productos)
             return True
