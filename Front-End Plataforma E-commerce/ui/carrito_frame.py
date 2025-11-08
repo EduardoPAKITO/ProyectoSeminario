@@ -114,4 +114,4 @@ class CarritoFrame(ctk.CTkFrame):
             self.vaciar_carrito_callback()
             self.refrescar()
         else:
-            messagebox.showerror("Error", msg or "No se pudo completar la compra.")
+            messagebox.showerror("Error", msg or "No se pudo realizar la compra.")
