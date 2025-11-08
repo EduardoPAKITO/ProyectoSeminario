@@ -6,16 +6,8 @@
       "imagen": "samsung a56.jpg",
       "stock_por_sucursal": {
         "Sucursal Centro": 0,
-        "Sucursal Norte": 1,
+        "Sucursal Norte": 0,
         "Sucursal Sur": 0
-      }
-    },
-    "samsung a56.jpg": {
-      "id": "ea66e508-8dd2-43a8-a6df-6ae47c3c6521",
-      "precio": 650000.0,
-      "imagen": "default.jpg",
-      "stock_por_sucursal": {
-        "Sucursal Norte": 10
       }
     },
     "Samsung S24 ": {
@@ -31,7 +23,7 @@
       "precio": 699.9,
       "imagen": "default.jpg",
       "stock_por_sucursal": {
-        "Sucursal Centro": 3,
+        "Sucursal Centro": 1,
         "Sucursal Norte": 1,
         "Sucursal Sur": 0
       }
@@ -54,6 +46,15 @@
         "Sucursal Centro": 3,
         "Sucursal Norte": 1,
         "Sucursal Sur": 0
+      }
+    },
+    "Samsuing A56": {
+      "id": "2ff5223a-868d-4c49-b7bc-1e89a4ce0960",
+      "precio": 500000.0,
+      "imagen": "Captura de pantalla 2025-09-12 220527.png",
+      "descripcion": "Celular Samsung A56 8GB RAM, 256 GB de almacenamiento interno",
+      "stock_por_sucursal": {
+        "Sucursal Centro": 10
       }
     }
   },
