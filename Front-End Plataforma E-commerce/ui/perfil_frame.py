@@ -13,8 +13,11 @@ class PerfilFrame(ctk.CTkFrame):
         titulo = ctk.CTkLabel(self, text="Mi Perfil", font=ctk.CTkFont(size=18, weight="bold"))
         titulo.pack(anchor="w", padx=12, pady=(12,8))
 
+        self.info_email = ctk.CTkLabel(self, text="Email: -")
+        self.info_email.pack(anchor="w", padx=12, pady=(4,2))
+
         self.info_usuario = ctk.CTkLabel(self, text="Usuario: -")
-        self.info_usuario.pack(anchor="w", padx=12, pady=(4,4))
+        self.info_usuario.pack(anchor="w", padx=12, pady=(2,4))
 
         ctk.CTkLabel(self, text="Historial de compras:", font=ctk.CTkFont(size=14)).pack(anchor="w", padx=12, pady=(12,4))
         self.historial_box = ctk.CTkTextbox(self, height=300, state="disabled")
@@ -26,10 +29,15 @@ class PerfilFrame(ctk.CTkFrame):
         usuario = self.funcion_get_usuario()
         if not usuario:
             self.info_usuario.configure(text="Usuario: -")
+            self.info_email.configure(text="Email: -")
             self.historial_box.configure(state="normal")
             self.historial_box.delete("0.0", "end")
             self.historial_box.configure(state="disabled")
             return
+        usuarios = DataManager.cargar_usuarios()
+        info = usuarios.get(usuario, {})
+        email = info.get("email", "-")
+        self.info_email.configure(text=f"Email: {email}")
         self.info_usuario.configure(text=f"Usuario: {usuario}")
         self.refrescar_historial()
 
@@ -42,7 +50,7 @@ class PerfilFrame(ctk.CTkFrame):
         self.historial_box.configure(state="normal")
         self.historial_box.delete("0.0", "end")
         if not compras:
-            self.historial_box.insert("end", "No se encontraron compras.\n")
+            self.historial_box.insert("end", "Todavía no realizaste una compra.\n")
         else:
             for c in compras:
                 linea = f"{c.get('fecha')} - {c.get('categoria')} / {c.get('producto')} x{c.get('cantidad')} - {c.get('sucursal')} - {c.get('metodo_pago')} - ${c.get('total'):.2f}\n"
