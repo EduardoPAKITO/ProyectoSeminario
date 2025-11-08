@@ -4,9 +4,10 @@
       "id": "1879559c-9fcc-440d-bb28-e9a49781f512",
       "precio": 699.9,
       "imagen": "samsung a56.jpg",
+      "descripcion": "Celular Samsung A56 8GB RAM, 256 GB de almacenamiento interno",
       "stock_por_sucursal": {
-        "Sucursal Centro": 0,
-        "Sucursal Norte": 0,
+        "Sucursal Centro": 3,
+        "Sucursal Norte": 1,
         "Sucursal Sur": 0
       }
     },
@@ -14,14 +15,18 @@
       "id": "dd49b7a2-7045-4df0-8322-21b26a3c1d47",
       "precio": 1000000.0,
       "imagen": "default.jpg",
+      "descripcion": "Celular Samsung A56 8GB RAM, 256 GB de almacenamiento interno",
       "stock_por_sucursal": {
-        "Sucursal Centro": 9
+        "Sucursal Centro": 3,
+        "Sucursal Norte": 1,
+        "Sucursal Sur": 0
       }
     },
     "Teléfono Modelo B": {
       "id": "1879559c-9fcc-440d-bb28-e9a49781f512",
       "precio": 699.9,
       "imagen": "default.jpg",
+      "descripcion": "Celular Samsung A56 8GB RAM, 256 GB de almacenamiento interno",
       "stock_por_sucursal": {
         "Sucursal Centro": 1,
         "Sucursal Norte": 1,
@@ -32,6 +37,7 @@
       "id": "1879559c-9fcc-440d-bb28-e9a49781f512",
       "precio": 699.9,
       "imagen": "default.jpg",
+      "descripcion": "Celular Samsung A56 8GB RAM, 256 GB de almacenamiento interno",
       "stock_por_sucursal": {
         "Sucursal Centro": 3,
         "Sucursal Norte": 1,
@@ -42,6 +48,7 @@
       "id": "1879559c-9fcc-440d-bb28-e9a49781f512",
       "precio": 699.9,
       "imagen": "default.jpg",
+      "descripcion": "Celular Samsung A56 8GB RAM, 256 GB de almacenamiento interno",
       "stock_por_sucursal": {
         "Sucursal Centro": 3,
         "Sucursal Norte": 1,
@@ -54,7 +61,20 @@
       "imagen": "Captura de pantalla 2025-09-12 220527.png",
       "descripcion": "Celular Samsung A56 8GB RAM, 256 GB de almacenamiento interno",
       "stock_por_sucursal": {
-        "Sucursal Centro": 10
+        "Sucursal Centro": 3,
+        "Sucursal Norte": 1,
+        "Sucursal Sur": 0
+      }
+    },
+    "fadas": {
+      "id": "8256993b-28c4-4f3f-8b7c-07c786f118fe",
+      "precio": 152165.0,
+      "imagen": "default.jpg",
+      "descripcion": "dadadasdas",
+      "stock_por_sucursal": {
+        "Sucursal Centro": 0,
+        "Sucursal Norte": 0,
+        "Sucursal Sur": 0
       }
     }
   },
@@ -63,17 +83,32 @@
       "id": "f1cf0d70-7a45-42e9-bcfa-2d742293a836",
       "precio": 19.9,
       "imagen": "default2.png",
+      "descripcion": "Celular Samsung A56 8GB RAM, 256 GB de almacenamiento interno",
       "stock_por_sucursal": {
-        "Sucursal Centro": 30,
-        "Sucursal Sur": 20
+        "Sucursal Centro": 3,
+        "Sucursal Norte": 1,
+        "Sucursal Sur": 0
       }
     },
     "Cargador Rápido 30W": {
       "id": "e874ccc8-9647-4121-a3c7-3cad45f28d55",
       "precio": 29.5,
       "imagen": "default2.png",
+      "descripcion": "Celular Samsung A56 8GB RAM, 256 GB de almacenamiento interno",
       "stock_por_sucursal": {
-        "Sucursal Norte": 5,
+        "Sucursal Centro": 3,
+        "Sucursal Norte": 1,
+        "Sucursal Sur": 0
+      }
+    },
+    "dadas": {
+      "id": "cab3ebf8-80c0-4bec-b09f-bf8fe78dbb23",
+      "precio": 1520.0,
+      "imagen": "default2.png",
+      "descripcion": "dadas",
+      "stock_por_sucursal": {
+        "Sucursal Centro": 0,
+        "Sucursal Norte": 0,
         "Sucursal Sur": 0
       }
     }

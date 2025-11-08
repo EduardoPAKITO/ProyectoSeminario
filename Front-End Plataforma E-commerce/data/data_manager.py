@@ -4,6 +4,7 @@ import os
 import uuid
 from datetime import datetime
 
+
 class DataManager:
     # Rutas CORREGIDAS - relativas al directorio del proyecto
     """""
@@ -15,7 +16,8 @@ class DataManager:
         RUTA_VENTAS (str): Ruta al archivo JSON de ventas
         CARPETA_IMAGENES (str): Ruta a la carpeta de imágenes
     """""
-    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # Directorio raíz del proyecto
+    BASE_DIR = os.path.dirname(os.path.dirname(
+        os.path.abspath(__file__)))  # Directorio raíz del proyecto
     DATA_DIR = os.path.join(BASE_DIR, "data")
     RUTA_USUARIOS = os.path.join(DATA_DIR, "usuarios.csv")
     RUTA_PRODUCTOS = os.path.join(DATA_DIR, "productos.json")
@@ -38,8 +40,10 @@ class DataManager:
             with open(DataManager.RUTA_USUARIOS, "w", newline="", encoding="utf-8") as f:
                 writer = csv.writer(f)
                 writer.writerow(["usuario", "clave", "rol", "email", "nombre"])
-                writer.writerow(["admin", "admin", "admin", "admin@local", "Administrador"])
-                writer.writerow(["cliente", "cliente", "cliente", "cliente@local", "Cliente"])
+                writer.writerow(["admin", "admin", "admin",
+                                "admin@local", "Administrador"])
+                writer.writerow(
+                    ["cliente", "cliente", "cliente", "cliente@local", "Cliente"])
 
     @staticmethod
     def _asegurar_productos_iniciales():
@@ -103,8 +107,8 @@ class DataManager:
             writer = csv.writer(f)
             writer.writerow(["usuario", "clave", "rol", "email", "nombre"])
             for usuario, info in dic_usuarios.items():
-                writer.writerow([usuario, info.get("clave",""), info.get("rol","cliente"),
-                                 info.get("email",""), info.get("nombre","")])
+                writer.writerow([usuario, info.get("clave", ""), info.get("rol", "cliente"),
+                                 info.get("email", ""), info.get("nombre", "")])
 
     @staticmethod
     def crear_usuario_cliente(usuario, clave, email="", nombre=""):
@@ -119,12 +123,13 @@ class DataManager:
             if info.get("nombre") and nombre and info.get("nombre").strip().lower() == nombre.strip().lower() and u != usuario:
                 # previene crear varias cuentas con mismo nombre "visible"
                 return False, "Ya existe una cuenta con el mismo nombre."
-        usuarios[usuario] = {"clave": clave, "rol": "cliente", "email": email, "nombre": nombre}
+        usuarios[usuario] = {"clave": clave,
+                             "rol": "cliente", "email": email, "nombre": nombre}
         DataManager.guardar_usuarios(usuarios)
         return True, "Usuario creado correctamente."
 
-
     # Métodos para productos
+
     @staticmethod
     def cargar_productos():
         if not os.path.exists(DataManager.RUTA_PRODUCTOS):
@@ -138,15 +143,22 @@ class DataManager:
             json.dump(dic_productos, f, indent=2, ensure_ascii=False)
 
     @staticmethod
-    def obtener_sucursales(dic_productos=None):
-        if dic_productos is None:
-            dic_productos = DataManager.cargar_productos()
+    def obtener_sucursales(dic_productos):
+        """Devuelve la lista única de sucursales encontradas en todos los productos."""
         sucursales = set()
         for categoria, productos in dic_productos.items():
             for p in productos.values():
                 for s in p.get("stock_por_sucursal", {}).keys():
                     sucursales.add(s)
         return sorted(list(sucursales))
+
+    @staticmethod
+    def obtener_categorias(dic_productos):
+        """Devuelve la lista única de categorias encontradas en todos los productos."""
+        categorias = set()
+        for c, productos in dic_productos.items():
+            categorias.add(c)
+        return sorted(list(categorias))
 
     @staticmethod
     def agregar_sucursal(nueva_sucursal):
@@ -169,7 +181,7 @@ class DataManager:
         DataManager.guardar_productos(productos)
 
     @staticmethod
-    def agregar_producto(categoria, nombre, precio, imagen_archivo, stock_por_sucursal, descripcion=""):
+    def agregar_producto(categoria, nombre, precio, imagen_archivo, stock_por_sucursal, descripcion):
         productos = DataManager.cargar_productos()
         if categoria not in productos:
             productos[categoria] = {}
@@ -209,7 +221,8 @@ class DataManager:
     def reducir_stock_al_comprar(categoria, nombre, sucursal, cantidad):
         productos = DataManager.cargar_productos()
         if categoria in productos and nombre in productos[categoria]:
-            actual = productos[categoria][nombre].get("stock_por_sucursal", {}).get(sucursal, 0)
+            actual = productos[categoria][nombre].get(
+                "stock_por_sucursal", {}).get(sucursal, 0)
             if cantidad > actual:
                 return False, f"Stock insuficiente en {sucursal}. Disponible: {actual}"
             productos[categoria][nombre]["stock_por_sucursal"][sucursal] = actual - cantidad

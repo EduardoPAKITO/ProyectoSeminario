@@ -1,5 +1,4 @@
 # cliente_frame.py
-# cliente_frame.py
 import tkinter as tk
 import customtkinter as ctk
 from data.data_manager import DataManager
@@ -31,19 +30,20 @@ class ClienteFrame(ctk.CTkFrame):
         derecho.pack(side="right", fill="y", padx=8, pady=8)
 
         # Buscador con selector de categoría
+        categorias = DataManager.obtener_categorias(DataManager.cargar_productos())
         filtro_fr = ctk.CTkFrame(izquierdo)
         filtro_fr.pack(fill="x", pady=(0,8))
         ctk.CTkLabel(filtro_fr, text="Buscar en:").pack(side="left", padx=6)
-        self.categoria_var = ctk.StringVar(value="Celulares")
-        ctk.CTkOptionMenu(filtro_fr, values=["Celulares", "Accesorios"], variable=self.categoria_var).pack(side="left", padx=6)
+        # Verificamos que la lista no esté vacía para evitar errores
+        valor_inicial = categorias[0] if categorias else ""
+        self.categoria_var = ctk.StringVar(value=valor_inicial)
+        ctk.CTkOptionMenu(filtro_fr, values=categorias, variable=self.categoria_var).pack(side="left", padx=6)
         self.buscar_entry = ctk.CTkEntry(filtro_fr, placeholder_text="Nombre del producto...")
         self.buscar_entry.pack(side="left", fill="x", expand=True, padx=6)
         ctk.CTkButton(filtro_fr, text="Buscar", command=self.buscar).pack(side="left", padx=6)
         ctk.CTkButton(filtro_fr, text="Mostrar todo", command=self.mostrar_todo).pack(side="left", padx=6)
 
         # Listado (scrollable)
-        #self.listado = ctk.CTkTextbox(izquierdo, state="disabled", height=20)
-        #self.listado.pack(fill="both", expand=True, padx=6, pady=6)
         self.scroll_frame = ctk.CTkScrollableFrame(izquierdo)
         self.scroll_frame.pack(fill="both", expand=True, padx=6, pady=6)
         self.row = 0

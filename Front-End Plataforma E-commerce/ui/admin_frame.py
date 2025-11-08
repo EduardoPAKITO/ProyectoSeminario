@@ -58,8 +58,8 @@ class AdminFrame(ctk.CTkFrame):
         btns_p = ctk.CTkFrame(derecha)
         btns_p.pack(fill="x", padx=6, pady=6)
         ctk.CTkButton(btns_p, text="Agregar producto", command=self.agregar_producto).pack(side="left", padx=6)
-        ctk.CTkButton(btns_p, text="Editar stock", command=self.editar_stock_dialog).pack(side="left", padx=6)
-        ctk.CTkButton(btns_p, text="Eliminar producto", command=self.eliminar_producto_dialog).pack(side="left", padx=6)
+        ctk.CTkButton(btns_p, text="Editar stock", command=self.editar_stock).pack(side="left", padx=6)
+        ctk.CTkButton(btns_p, text="Eliminar producto", command=self.eliminar_producto).pack(side="left", padx=6)
         ctk.CTkButton(btns_p, text="Refrescar", command=self.refrescar_todo).pack(side="right", padx=6)
 
         self.refrescar_todo()
@@ -161,10 +161,9 @@ class AdminFrame(ctk.CTkFrame):
             img_label.place(x=0, y=0, width=200, height=200)
     
     def agregar_producto(self):
-        top = tk.Toplevel(self)
+        top = ctk.CTkToplevel(self)
         top.title("Agregar articulo")
         top.geometry("700x400+200+50")
-        top.config(bg="#C6D9E3")
         top.resizable(False, False)
 
         top.transient(self.master)
@@ -172,43 +171,76 @@ class AdminFrame(ctk.CTkFrame):
         top.focus_set()
         top.lift()
 
-        tk.Label(top, text="Categoria: ", font="arial 12 bold", bg="#C6D9E3").place(x=20, y=20, width=80, height=25)
-        entry_categoria = ttk.Entry(top, font="arial 12 bold")
-        entry_categoria.place(x=120, y=20, width=250, height=30)
+        self.image_path = None 
 
-        tk.Label(top, text="Nombre:", font="arial 12 bold", bg="#C6D9E3").place(x=20, y=60, width=80, height=25)
+        #Obtener lista de categorias
+        categorias = DataManager.obtener_categorias(DataManager.cargar_productos())
+        valor_inicial = categorias[0] if categorias else ""
+        self.categoria_var = ctk.StringVar(value=valor_inicial) 
+
+        tk.Label(top, text="Categoria:", font="arial 12 bold", fg="white", bg=top["bg"], anchor=tk.W).place(x=20, y=40, width=80, height=25)
+        entry_categoria = ctk.CTkOptionMenu(master=top, values=categorias, variable=self.categoria_var, width=250, height=30)
+        entry_categoria.place(x=125, y=40)
+
+        tk.Label(top, text="Nombre:", font="arial 12 bold", fg="white", bg=top["bg"], anchor=tk.W).place(x=20, y=80, width=80, height=25)
         entry_nombre = ttk.Entry(top, font="arial 12 bold")
-        entry_nombre.place(x=120, y=60, width=250, height=30)
+        entry_nombre.place(x=125, y=80, width=250, height=30)
 
-        tk.Label(top, text="Precio: ", font="arial 12 bold", bg="#C6D9E3").place(x=20, y=100, width=80, height=25)
+        tk.Label(top, text="Precio:", font="arial 12 bold", fg="white", bg=top["bg"], anchor=tk.W).place(x=20, y=120, width=80, height=25)
         entry_precio = ttk.Entry(top, font="arial 12 bold")
-        entry_precio.place(x=120, y=100, width=250, height=30)
+        entry_precio.place(x=125, y=120, width=250, height=30)
 
-        tk.Label(top, text="Sucursal: ", font="arial 12 bold", bg="#C6D9E3").place(x=20, y=140, width=80, height=25)
-        entry_sucursal = ttk.Entry(top, font="arial 12 bold")
-        entry_sucursal.place(x=120, y=140, width=250, height=30)
-
-        tk.Label(top, text="Stock: ", font="arial 12 bold", bg="#C6D9E3").place(x=20, y=180, width=80, height=25)
-        entry_stock = ttk.Entry(top, font="arial 12 bold")
-        entry_stock.place(x=120, y=180, width=250, height=30)
-
-        tk.Label(top, text="Descripcion: ", font="arial 12 bold", bg="#C6D9E3").place(x=20, y=220, width=100, height=25)
-        entry_desc = ttk.Entry(top, font="arial 12 bold")
-        entry_desc.place(x=120, y=220, width=250, height=30)
+        tk.Label(top, text="Descripcion: ", font="arial 12 bold", fg="white", bg=top["bg"], anchor=tk.W).place(x=20, y=160, width=100, height=25)
+        text_desc = tk.Text(top, font="arial 12")
+        text_desc.place(x=125, y=160, width=250, height=78)
 
         self.frameimg = tk.Frame(top, bg="white", highlightbackground="gray", highlightthickness=1)
         self.frameimg.place(x=440, y=30, width=200, height=200)
 
-        btnimage = tk.Button(top, text="Cargar imagen", font="arial 12 bold", command=self. load_image)
-        btnimage.place(x=470, y=260, width=150, height=40)
+        btnimage = tk.Button(top, text="Cargar imagen", font="arial 12 bold", command=self.load_image, fg="white", bg="#2E8B64")
+        btnimage.place(x=470, y=245, width=150, height=40)
+
+        sucursales = DataManager.obtener_sucursales(DataManager.cargar_productos())  # lista de nombres de sucursales
+        stock_por_sucursal = {s: 0 for s in sucursales}  # inicializa todo en 0 
+
+        def agregar_stock_sucursal():
+            """Abre una ventana para agregar stock por sucursal."""
+            sub = ctk.CTkToplevel(top)
+            sub.title("Agregar stock por sucursal")
+            sub.geometry("350x200+300+150")
+            sub.resizable(False, False)
+
+            sub.transient(self.master)
+            sub.grab_set()
+            sub.focus_set()
+            sub.lift()
+
+            sucursal_var = ctk.StringVar(value=sucursales[0] if sucursales else "")
+            stock_var = tk.StringVar()
+
+            tk.Label(sub, text="Sucursal:", font="arial 12 bold", fg="white", bg=top["bg"]).place(x=20, y=30, width=100, height=25)
+            ctk.CTkOptionMenu(sub, values=sucursales, variable=sucursal_var, width=180).place(x=130, y=30)
+
+            tk.Label(sub, text="Stock:", font="arial 12 bold", fg="white", bg=top["bg"]).place(x=20, y=70, width=100, height=25)
+            ttk.Entry(sub, textvariable=stock_var, font="arial 12 bold").place(x=130, y=70, width=180, height=30)
+            
+            def guardar_stock():
+                    sucursal = sucursal_var.get()
+                    try:
+                        cantidad = int(stock_var.get())
+                        stock_por_sucursal[sucursal] = cantidad
+                        messagebox.showinfo("OK", f"Stock asignado a {sucursal}: {cantidad}")
+                        sub.destroy()
+                    except ValueError:
+                        messagebox.showerror("Error", "El stock debe ser un número entero válido.")
+            
+            tk.Button(sub, text="Guardar", font="arial 12 bold", command=guardar_stock, fg="white", bg="#2E8B64").place(x=110, y=120, width=120, height=35)
 
         def guardar():
-            categoria = entry_categoria.get().strip()
-            precio = entry_precio.get().strip()
-            stock = entry_stock.get().strip()
-            nombre = entry_nombre.get().strip()
-            sucursal = entry_sucursal.get().strip()
-            descripcion = entry_desc.get().strip()
+            categoria = self.categoria_var.get()
+            nombre = entry_nombre.get()
+            precio = entry_precio.get()
+            descripcion = text_desc.get("1.0", tk.END).strip()  
 
             if not categoria or not precio or not nombre:
                 messagebox.showerror ("Error", "Categoria, precio y nombre son obligatorios")
@@ -220,26 +252,15 @@ class AdminFrame(ctk.CTkFrame):
                 messagebox. showerror ("Error", "precio debe ser un numero valido")
                 return
             
-            if hasattr(self, 'image_path'):
+            if self.image_path:
                 image_path = self.image_path
             else:
-                image_path = (r"default.jpg")
+                if categoria == "Celulares":
+                    image_path = "default.jpg"
+                else:
+                    image_path = "default2.png"
 
-            stock_por_sucursal = {}
-            if sucursal:
-                # validar que sucursal exista EN EL SISTEMA
-                sucursales_existentes = DataManager.obtener_sucursales()
-                if sucursal not in sucursales_existentes:
-                    messagebox.showerror("Error", f"La sucursal '{sucursal}' no existe. Primero crea la sucursal.")
-                    return
-                try:
-                    stock_val = int(stock) if stock else 0
-                except Exception:
-                    messagebox.showerror("Error", "Stock debe ser un número entero.")
-                    return
-                stock_por_sucursal[sucursal] = stock_val
-
-            ok, mensaje = DataManager.agregar_producto(categoria, nombre, precio, image_path or "", stock_por_sucursal, descripcion=descripcion)
+            ok, mensaje = DataManager.agregar_producto(categoria, nombre, precio, image_path or "", stock_por_sucursal, descripcion)
             if not ok:
                 messagebox.showerror("Error", mensaje)
                 return
@@ -248,83 +269,113 @@ class AdminFrame(ctk.CTkFrame):
             self.refrescar_productos()
             self.refrescar_sucursales()
 
-        tk.Button(top, text="Guardar", font="arial 12 bold", command=guardar).place(x=50, y=260, width=150, height=40)
-        tk.Button(top, text="Cancelar", font="arial 12 bold", command=top.destroy).place(x=260, y=260, width=150, height=40)
-    #ESTE ESTA DE GANAS NO? Porque el que funciona es el otro
-    def agregar_producto_dialog(self):
-        categoria = simpledialog.askstring("Categoria", "Categoria (Celulares o Accesorios):", parent=self)
-        if not categoria:
-            return
-        nombre = simpledialog.askstring("Nombre", "Nombre del producto:", parent=self)
-        if not nombre:
-            return
-        precio = simpledialog.askstring("Precio", "Precio (ej. 199.99):", parent=self)
-        stock_txt = simpledialog.askstring("Stock por sucursal", "Formato: Sucursal1:10,Sucursal2:5 (puedes dejar vacío):", parent=self)
-        imagen = simpledialog.askstring("Imagen", "Nombre de archivo dentro de folder 'images' (opcional):", parent=self)
-        try:
-            precio_f = float(precio)
-        except Exception:
-            messagebox.showerror("Error", "Precio inválido.")
-            return
-        stock_por_sucursal = {}
-        if stock_txt:
-            for parte in stock_txt.split(","):
-                if ":" in parte:
-                    s, c = parte.split(":", 1)
-                    s = s.strip()
-                    c = c.strip()
-                    # validar sucursal existente
-                    sucursales_existentes = DataManager.obtener_sucursales()
-                    if s not in sucursales_existentes:
-                        messagebox.showerror("Error", f"La sucursal '{s}' no existe.")
-                        return
-                    try:
-                        stock_por_sucursal[s] = int(c)
-                    except Exception:
-                        stock_por_sucursal[s] = 0
-        ok, mensaje = DataManager.agregar_producto(categoria, nombre, precio_f, imagen or "", stock_por_sucursal)
-        if not ok:
-            messagebox.showerror("Error", mensaje)
-            return
-        messagebox.showinfo("OK", "Producto agregado.")
-        self.refrescar_productos()
-        self.refrescar_sucursales()
+        # Botón principal para agregar stock por sucursal
+        tk.Button(top, text="Agregar stock por sucursal", font="arial 12 bold", command=agregar_stock_sucursal, fg="white", bg="#2E8B64").place(x=125, y=245, width=250, height=35)       
+        tk.Button(top, text="Guardar", font="arial 12 bold", command=guardar, fg="white", bg="#2E8B64").place(x=170, y=330, width=150, height=40)
+        tk.Button(top, text="Cancelar", font="arial 12 bold", command=top.destroy, fg="white", bg="#2E8B64").place(x=380, y=330, width=150, height=40)
 
-    def editar_stock_dialog(self):
-        categoria = simpledialog.askstring("Categoria", "Categoria del producto:", parent=self)
-        nombre = simpledialog.askstring("Nombre", "Nombre exacto del producto:", parent=self)
-        if not categoria or not nombre:
-            return
-        sucursal = simpledialog.askstring("Sucursal", "Sucursal a modificar:", parent=self)
-        if not sucursal:
-            return
-        # validar sucursal
-        sucursales_existentes = DataManager.obtener_sucursales()
-        if sucursal not in sucursales_existentes:
-            messagebox.showerror("Error", f"La sucursal '{sucursal}' no existe.")
-            return
-        nuevo = simpledialog.askinteger("Nuevo stock", f"Nuevo stock para {nombre} en {sucursal}:", parent=self, minvalue=0)
-        if nuevo is None:
-            return
-        ok = DataManager.actualizar_stock(categoria, nombre, sucursal, nuevo)
-        if ok:
-            messagebox.showinfo("OK", "Stock actualizado.")
-            self.refrescar_productos()
-        else:
-            messagebox.showerror("Error", "No se pudo actualizar (revisar categoría/nombre).")
+    def editar_stock(self):
+        top = ctk.CTkToplevel(self)
+        top.title("Editar stock")
+        top.geometry("700x400+200+50")
+        top.resizable(False, False)
 
-    def eliminar_producto_dialog(self):
-        categoria = simpledialog.askstring("Categoria", "Categoria del producto:", parent=self)
-        nombre = simpledialog.askstring("Nombre", "Nombre exacto del producto:", parent=self)
-        if not categoria or not nombre:
-            return
-        confirm = messagebox.askyesno("Confirmar", f"Eliminar producto {nombre} en {categoria}?")
-        if not confirm:
-            return
-        ok = DataManager.eliminar_producto(categoria, nombre)
-        if ok:
-            messagebox.showinfo("OK", "Producto eliminado.")
-            self.refrescar_productos()
-            self.refrescar_sucursales()
-        else:
-            messagebox.showerror("Error", "No se encontró el producto.")
+        top.transient(self.master)
+        top.grab_set()
+        top.focus_set()
+        top.lift()
+
+        #Obtener lista de categorias
+        categorias = DataManager.obtener_categorias(DataManager.cargar_productos())
+        valor_inicial = categorias[0] if categorias else ""
+        self.categoria_var = ctk.StringVar(value=valor_inicial) 
+
+        tk.Label(top, text="Categoria:", font="arial 12 bold", fg="white", bg=top["bg"]).place(x=150, y=60, width=80, height=25)
+        entry_categoria = ctk.CTkOptionMenu(master=top, values=categorias, variable=self.categoria_var, width=250, height=30)
+        entry_categoria.place(x=260, y=60)
+
+        tk.Label(top, text="Nombre:", font="arial 12 bold", fg="white", bg=top["bg"]).place(x=150, y=100, width=80, height=25)
+        entry_nombre = ttk.Entry(top, font="arial 12 bold")
+        entry_nombre.place(x=260, y=100, width=250, height=30)
+
+        #Obtener lista de nombres de sucursales
+        sucursales = DataManager.obtener_sucursales(DataManager.cargar_productos())
+        sucursal_var = ctk.StringVar(value=sucursales[0] if sucursales else "")
+        stock_var = tk.StringVar()
+
+        tk.Label(top, text="Sucursal:", font="arial 12 bold", fg="white", bg=top["bg"]).place(x=150, y=140, width=100, height=25)
+        ctk.CTkOptionMenu(top, values=sucursales, variable=sucursal_var, width=180).place(x=260, y=140)
+
+        tk.Label(top, text="Stock:", font="arial 12 bold", fg="white", bg=top["bg"]).place(x=150, y=180, width=100, height=25)
+        ttk.Entry(top, textvariable=stock_var, font="arial 12 bold").place(x=260, y=180, width=180, height=30)
+        
+        def actualizar():
+            categoria = self.categoria_var.get()
+            nombre = entry_nombre.get()
+            sucursal = sucursal_var.get()
+            nuevo = stock_var.get()
+
+            if not nuevo or not nombre:
+                messagebox.showerror ("Error", "Todos los campos deben ser completados")
+                return
+            
+            try:
+                stock = float (nuevo)
+            except ValueError:
+                messagebox. showerror ("Error", "stock deben ser numeros validos")
+                return
+
+            ok = DataManager.actualizar_stock(categoria, nombre, sucursal, stock)
+            if ok:
+                messagebox.showinfo("OK", "Stock actualizado.")
+                top. destroy()
+                self.refrescar_productos()
+            else:
+                messagebox.showerror("Error", "No se pudo actualizar (revisar que los datos esten correctos).")
+
+        tk.Button(top, text="Actualizar Stock", font="arial 12 bold", command=actualizar, fg="white", bg="#2E8B64").place(x=150, y=260, width=150, height=40)
+        tk.Button(top, text="Cancelar", font="arial 12 bold", command=top.destroy, fg="white", bg="#2E8B64").place(x=350, y=260, width=150, height=40)
+
+    def eliminar_producto(self):
+        top = ctk.CTkToplevel(self)
+        top.title("Eliminar producto")
+        top.geometry("700x300+200+50")
+        top.resizable(False, False)
+
+        top.transient(self.master)
+        top.grab_set()
+        top.focus_set()
+        top.lift()
+
+        #Obtener lista de categorias
+        categorias = DataManager.obtener_categorias(DataManager.cargar_productos())
+        valor_inicial = categorias[0] if categorias else ""
+        self.categoria_var = ctk.StringVar(value=valor_inicial) 
+
+        tk.Label(top, text="Categoria:", font="arial 12 bold", fg="white", bg=top["bg"]).place(x=150, y=60, width=80, height=25)
+        entry_categoria = ctk.CTkOptionMenu(master=top, values=categorias, variable=self.categoria_var, width=250, height=30)
+        entry_categoria.place(x=260, y=60)
+
+        tk.Label(top, text="Nombre:", font="arial 12 bold", fg="white", bg=top["bg"]).place(x=150, y=100, width=80, height=25)
+        entry_nombre = ttk.Entry(top, font="arial 12 bold")
+        entry_nombre.place(x=260, y=100, width=250, height=30)
+
+        def eliminar():
+            categoria = self.categoria_var.get()
+            nombre = entry_nombre.get()
+
+            if not nombre:
+                messagebox.showerror ("Error", "Debe completar el campo")
+                return
+            
+            ok = DataManager.eliminar_producto(categoria, nombre)
+            if ok:
+                messagebox.showinfo("OK", "Producto eliminado.")
+                top. destroy()
+                self.refrescar_productos()
+                self.refrescar_sucursales()
+            else:
+                messagebox.showerror("Error", "No se encontró el producto.")
+
+        tk.Button(top, text="Eliminar producto", font="arial 12 bold", command=eliminar, fg="white", bg="#2E8B64").place(x=150, y=180, width=150, height=40)
+        tk.Button(top, text="Cancelar", font="arial 12 bold", command=top.destroy, fg="white", bg="#2E8B64").place(x=350, y=180, width=150, height=40)
