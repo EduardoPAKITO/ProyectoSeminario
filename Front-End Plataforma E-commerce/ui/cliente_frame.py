@@ -1,9 +1,10 @@
 # cliente_frame.py
+# cliente_frame.py
 import tkinter as tk
 import customtkinter as ctk
 from data.data_manager import DataManager
 from tkinter import messagebox
-from PIL import Image, ImageTk
+from PIL import Image
 from customtkinter import CTkImage
 import os
 
@@ -12,11 +13,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # Direct
 CARPETA_IMAGENES = os.path.join(BASE_DIR, "images")
 
 class ClienteFrame(ctk.CTkFrame):
-    def __init__(self, master, funcion_get_usuario, *args, **kwargs):
+    def __init__(self, master, funcion_get_usuario, add_to_cart_callback=None, role="cliente", *args, **kwargs):
         super().__init__(master, *args, **kwargs)
         self.funcion_get_usuario = funcion_get_usuario
+        self.add_to_cart_callback = add_to_cart_callback  # callback para agregar al carrito en App
+        self.role = role
         self.productos_mostrados = []  # lista de tuples (categoria, nombre, datos)
         self.imagen_actual = None
+        self.seleccion_actual = None
         self._construir()
 
     def _construir(self):
@@ -45,17 +49,13 @@ class ClienteFrame(ctk.CTkFrame):
         self.row = 0
         self.column = 0
 
-        # Selección por índice
-        sel_fr = ctk.CTkFrame(izquierdo)
-        sel_fr.pack(fill="x", pady=(4,0))
-        ctk.CTkLabel(sel_fr, text="Índice:").pack(side="left", padx=6)
-        self.idx_entry = ctk.CTkEntry(sel_fr, width=80)
-        self.idx_entry.pack(side="left", padx=6)
-        ctk.CTkButton(sel_fr, text="Seleccionar", command=self.seleccionar_por_indice).pack(side="left", padx=6)
-
         # DETALLE DERECHO
         self.lbl_nombre = ctk.CTkLabel(derecho, text="Producto: -", font=ctk.CTkFont(size=16, weight="bold"))
         self.lbl_nombre.pack(anchor="w", pady=(6,4))
+
+        # descripción
+        self.lbl_descripcion = ctk.CTkLabel(derecho, text="Descripción: -", wraplength=320, justify="left")
+        self.lbl_descripcion.pack(anchor="w", pady=(2,4), padx=8)
 
         # label para imagen (se ajusta)
         self.label_imagen = ctk.CTkLabel(derecho, text="(sin imagen)", width=300, height=200)
@@ -67,7 +67,8 @@ class ClienteFrame(ctk.CTkFrame):
         self.lbl_stock.pack(anchor="w", padx=8, pady=(2,0))
 
         ctk.CTkLabel(derecho, text="Sucursal:").pack(anchor="w", padx=8, pady=(8,0))
-        self.sucursal_menu = ctk.CTkOptionMenu(derecho, values=[])
+        # Creamos option menu y vinculamos comando para actualizar stock cuando cambie
+        self.sucursal_menu = ctk.CTkOptionMenu(derecho, values=[], command=self.cambiar_sucursal)
         self.sucursal_menu.pack(anchor="w", padx=8, pady=(0,8))
 
         ctk.CTkLabel(derecho, text="Cantidad:").pack(anchor="w", padx=8)
@@ -75,15 +76,12 @@ class ClienteFrame(ctk.CTkFrame):
         self.cantidad_entry.insert(0, "1")
         self.cantidad_entry.pack(anchor="w", padx=8, pady=(0,8))
 
-        ctk.CTkLabel(derecho, text="Pago:").pack(anchor="w", padx=8)
-        self.metodo_pago = ctk.StringVar(value="contado")
-        pay_fr = ctk.CTkFrame(derecho)
-        pay_fr.pack(anchor="w", padx=8, pady=(0,8))
-        ctk.CTkRadioButton(pay_fr, text="Contado", variable=self.metodo_pago, value="contado").pack(side="left", padx=6)
-        ctk.CTkRadioButton(pay_fr, text="Débito", variable=self.metodo_pago, value="debito").pack(side="left", padx=6)
-        ctk.CTkRadioButton(pay_fr, text="Crédito", variable=self.metodo_pago, value="credito").pack(side="left", padx=6)
+        # Si es cliente mostramos botón Agregar al carrito. Si es admin, no.
+        if self.role != "admin":
+            ctk.CTkButton(derecho, text="Agregar al carrito", command=self.agregar_al_carrito).pack(pady=(8,4))
+        else:
+            ctk.CTkLabel(derecho, text="Vista Administrador (no se permiten compras)").pack(pady=(8,4))
 
-        ctk.CTkButton(derecho, text="Comprar", command=self.comprar).pack(pady=(8,4))
         ctk.CTkButton(derecho, text="Limpiar", fg_color="gray70", hover_color="gray60", command=self.limpiar_detalle).pack()
 
         # Inicializar mostrando todo
@@ -121,13 +119,14 @@ class ClienteFrame(ctk.CTkFrame):
             stock_total = sum(prod.get("stock_por_sucursal", {}).values())
             imagen_nombre = prod.get("imagen", "")
             ruta_imagen = os.path.join(CARPETA_IMAGENES, imagen_nombre) if imagen_nombre else None
-            self.mostrar_articulo(i, nombre, prod.get("precio", 0), ruta_imagen, stock_total)
+            self.mostrar_articulo(i, nombre, prod.get("precio", 0), ruta_imagen, stock_total, (cat, nombre, prod))
 
-
-    def mostrar_articulo(self, indice, articulo, precio, imagen_path, stock):
+    def mostrar_articulo(self, indice, articulo, precio, imagen_path, stock, producto_tuple):
         # Frame individual para cada producto
         article_frame = ctk.CTkFrame(self.scroll_frame, fg_color="white", corner_radius=8)
         article_frame.grid(row=self.row, column=self.column, padx=7, pady=10, sticky="nsew")
+        # ahora se puede seleccionar haciendo click en cualquier parte del producto
+        article_frame.bind("<Button-1>", lambda e, t=producto_tuple: self.mostrar_detalle(*t))
 
         # Índice negrita arriba
         ctk.CTkLabel(article_frame, text=f"{indice})", text_color="red", font=ctk.CTkFont(size=15, weight="bold")).pack(anchor="w", padx=6, pady=(2, 0))
@@ -135,31 +134,12 @@ class ClienteFrame(ctk.CTkFrame):
         # Imagen
         if imagen_path and os.path.exists(imagen_path):
             try:
-                # 1. Abre la imagen de PIL
                 pil_image = Image.open(imagen_path)
-
-                # 2. Crea el objeto CTkImage. 
-                #    CustomTkinter maneja el tamaño, pero puedes usar size=(ancho, alto) si quieres especificarlo.
-                #    Normalmente, le pasas la imagen de PIL abierta.
-                ctk_image_obj = CTkImage(
-                    light_image=pil_image, # Imagen para modo claro (o la misma para ambos)
-                    dark_image=pil_image,  # Imagen para modo oscuro (o la misma para ambos)
-                    size=(150, 150)        # Tamaño deseado
-                )
-
-                # 3. Pasa el objeto CTkImage al CTkLabel
+                ctk_image_obj = CTkImage(light_image=pil_image, dark_image=pil_image, size=(150, 150))
                 img_label = ctk.CTkLabel(article_frame, image=ctk_image_obj, text="")
-
-                # Ya no necesitas hacer img_label.image = ... porque CTkImage lo maneja.
                 img_label.pack(expand=True, fill="both", pady=(4, 2))
-                """                
-                image = Image.open(imagen_path)
-                image = image.resize((150, 150), Image.LANCZOS)
-                img_tk = ImageTk.PhotoImage(image)
-                img_label = ctk.CTkLabel(article_frame, image=img_tk, text="")
-                img_label.image = img_tk  # mantener referencia
-                img_label.pack(expand=True, fill="both", pady=(4, 2))
-                """
+                # click también sobre imagen
+                img_label.bind("<Button-1>", lambda e, t=producto_tuple: self.mostrar_detalle(*t))
             except Exception:
                 ctk.CTkLabel(article_frame, text="(Error cargando imagen)", text_color="gray").pack()
 
@@ -176,22 +156,10 @@ class ClienteFrame(ctk.CTkFrame):
             self.column = 0
             self.row += 1
 
-        
-
-    def seleccionar_por_indice(self):
-        idx_txt = self.idx_entry.get().strip()
-        if not idx_txt.isdigit():
-            messagebox.showwarning("Índice inválido", "Ingrese un número de índice válido.")
-            return
-        idx = int(idx_txt) - 1
-        if idx < 0 or idx >= len(self.productos_mostrados):
-            messagebox.showwarning("Fuera de rango", "Índice fuera de rango.")
-            return
-        categoria, nombre, producto = self.productos_mostrados[idx]
-        self.mostrar_detalle(categoria, nombre, producto)
-
     def mostrar_detalle(self, categoria, nombre, producto):
         self.lbl_nombre.configure(text=f"Producto: {nombre}")
+        descripcion = producto.get("descripcion", "(sin descripción)")
+        self.lbl_descripcion.configure(text=f"Descripción: {descripcion}")
         self.lbl_precio.configure(text=f"Precio: ${producto.get('precio'):.2f}")
         # cargar sucursales
         sucursales = list(producto.get("stock_por_sucursal", {}).keys())
@@ -210,12 +178,10 @@ class ClienteFrame(ctk.CTkFrame):
         ruta = os.path.join(CARPETA_IMAGENES, imagen_nombre) if imagen_nombre else None
         if ruta and os.path.exists(ruta):
             try:
-                img = Image.open(ruta)
-                # tamaño máximo relativo a label (ajustable): 300x300
-                max_ancho, max_alto = 300, 300
-                img.thumbnail((max_ancho, max_alto))
-                self.imagen_actual = ImageTk.PhotoImage(img)
-                self.label_imagen.configure(image=self.imagen_actual, text="")
+                pil_image = Image.open(ruta)
+                ctk_image_obj = CTkImage(light_image=pil_image, dark_image=pil_image, size=(300, 300))
+                self.label_imagen.configure(image=ctk_image_obj, text="")
+                self.label_imagen.image = ctk_image_obj
             except Exception:
                 self.label_imagen.configure(image=None, text="(imagen no cargada)")
         else:
@@ -224,26 +190,37 @@ class ClienteFrame(ctk.CTkFrame):
         # almacenar selección actual
         self.seleccion_actual = {"categoria": categoria, "nombre": nombre, "producto": producto}
 
+    def cambiar_sucursal(self, nuevo_val):
+        # actualizar label de stock según la sucursal seleccionada
+        sel = getattr(self, "seleccion_actual", None)
+        if not sel:
+            return
+        producto = sel["producto"]
+        stock_s = producto.get("stock_por_sucursal", {}).get(nuevo_val, 0)
+        self.lbl_stock.configure(text=f"Stock en {nuevo_val}: {stock_s}")
+
     def limpiar_detalle(self):
         self.lbl_nombre.configure(text="Producto: -")
+        self.lbl_descripcion.configure(text="Descripción: -")
         self.lbl_precio.configure(text="Precio: -")
         self.lbl_stock.configure(text="Stock en sucursal: -")
-        self.sucursal_menu.configure(values=[])
-        self.sucursal_menu.set("")
+        try:
+            self.sucursal_menu.configure(values=[])
+            self.sucursal_menu.set("")
+        except Exception:
+            pass
         self.cantidad_entry.delete(0, "end")
         self.cantidad_entry.insert(0, "1")
-        self.metodo_pago.set("contado")
-        self.idx_entry.delete(0, "end")
         self.label_imagen.configure(image=None, text="(sin imagen)")
         self.productos_mostrados = []
         self.seleccion_actual = None
         # Volver a cargar la vista actual
         self.mostrar_todo()
 
-    def comprar(self):
+    def agregar_al_carrito(self):
         usuario = self.funcion_get_usuario()
         if not usuario:
-            messagebox.showwarning("Acceso", "Debes iniciar sesión para comprar.")
+            messagebox.showwarning("Acceso", "Debes iniciar sesión para agregar al carrito.")
             return
         sel = getattr(self, "seleccion_actual", None)
         if not sel:
@@ -269,19 +246,16 @@ class ClienteFrame(ctk.CTkFrame):
         if cantidad > stock_disponible:
             messagebox.showerror("Stock insuficiente", f"Solo hay {stock_disponible} unidades en {sucursal}.")
             return
-        metodo = self.metodo_pago.get()
-        total = producto.get("precio") * cantidad
-        confirmar = messagebox.askyesno("Confirmar compra",
-                                        f"Usuario: {usuario}\nProducto: {nombre}\nCantidad: {cantidad}\nSucursal: {sucursal}\nPago: {metodo}\nTotal: ${total:.2f}\n\nConfirmar?")
-        if not confirmar:
-            return
-        # Reducir stock y registrar compra
-        ok, msg = DataManager.reducir_stock_al_comprar(categoria, nombre, sucursal, cantidad)
-        if not ok:
-            messagebox.showerror("Error", msg)
-            return
-        DataManager.registrar_venta(usuario, categoria, nombre, cantidad, sucursal, metodo, total)
-        messagebox.showinfo("Compra exitosa", f"Compra registrada. Total: ${total:.2f}")
-        # refrescar listado y limpiar detalle
-        self.mostrar_todo()
-        self.limpiar_detalle()
+        # llamar callback para agregar al carrito en App (si existe)
+        if self.add_to_cart_callback:
+            self.add_to_cart_callback({
+                "usuario": usuario,
+                "categoria": categoria,
+                "producto": nombre,
+                "cantidad": cantidad,
+                "sucursal": sucursal,
+                "precio_unitario": producto.get("precio", 0)
+            })
+            messagebox.showinfo("Carrito", f"{cantidad} x {nombre} agregado al carrito.")
+        else:
+            messagebox.showwarning("Carrito", "No está disponible la funcionalidad de carrito.")
