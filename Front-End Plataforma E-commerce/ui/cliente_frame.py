@@ -71,6 +71,10 @@ class ClienteFrame(ctk.CTkFrame):
         self.sucursal_menu = ctk.CTkOptionMenu(derecho, values=[], command=self.cambiar_sucursal)
         self.sucursal_menu.pack(anchor="w", padx=8, pady=(0,8))
 
+        # Mostrar dirección de la sucursal seleccionada
+        self.lbl_sucursal_info = ctk.CTkLabel(derecho, text="Dirección: -")
+        self.lbl_sucursal_info.pack(anchor="w", padx=8, pady=(0,6))
+
         ctk.CTkLabel(derecho, text="Cantidad:").pack(anchor="w", padx=8)
         self.cantidad_entry = ctk.CTkEntry(derecho, width=80)
         self.cantidad_entry.insert(0, "1")
@@ -129,7 +133,7 @@ class ClienteFrame(ctk.CTkFrame):
         article_frame.bind("<Button-1>", lambda e, t=producto_tuple: self.mostrar_detalle(*t))
 
         # Índice negrita arriba
-        ctk.CTkLabel(article_frame, text=f"{indice})", text_color="red", font=ctk.CTkFont(size=15, weight="bold")).pack(anchor="w", padx=6, pady=(2, 0))
+        ctk.CTkLabel(article_frame, text=f"{indice})", text_color="black", font=ctk.CTkFont(size=15, weight="bold")).pack(anchor="w", padx=6, pady=(2, 0))
 
         # Imagen
         if imagen_path and os.path.exists(imagen_path):
@@ -165,13 +169,28 @@ class ClienteFrame(ctk.CTkFrame):
         sucursales = list(producto.get("stock_por_sucursal", {}).keys())
         if sucursales:
             self.sucursal_menu.configure(values=sucursales)
-            self.sucursal_menu.set(sucursales[0])
-            stock_s = producto.get("stock_por_sucursal", {}).get(sucursales[0], 0)
-            self.lbl_stock.configure(text=f"Stock en {sucursales[0]}: {stock_s}")
+            # establecer primer valor si no hay seleccionado
+            sel = sucursales[0]
+            try:
+                self.sucursal_menu.set(sel)
+            except Exception:
+                pass
+            stock_s = producto.get("stock_por_sucursal", {}).get(sel, 0)
+            self.lbl_stock.configure(text=f"Stock en {sel}: {stock_s}")
+            # mostrar dirección de la sucursal
+            sucursales_info = DataManager.cargar_sucursales()
+            info = sucursales_info.get(sel, {})
+            direccion = info.get("direccion", "(sin dirección)")
+            telefono = info.get("telefono", "")
+            self.lbl_sucursal_info.configure(text=f"Dirección: {direccion} {'- Tel:' + telefono if telefono else ''}")
         else:
             self.sucursal_menu.configure(values=[])
-            self.sucursal_menu.set("")
+            try:
+                self.sucursal_menu.set("")
+            except Exception:
+                pass
             self.lbl_stock.configure(text="Sin sucursales")
+            self.lbl_sucursal_info.configure(text="Dirección: -")
 
         # cargar imagen ajustable
         imagen_nombre = producto.get("imagen", "")
@@ -198,6 +217,12 @@ class ClienteFrame(ctk.CTkFrame):
         producto = sel["producto"]
         stock_s = producto.get("stock_por_sucursal", {}).get(nuevo_val, 0)
         self.lbl_stock.configure(text=f"Stock en {nuevo_val}: {stock_s}")
+        # actualizar info de sucursal (dirección y teléfono)
+        sucursales_info = DataManager.cargar_sucursales()
+        info = sucursales_info.get(nuevo_val, {})
+        direccion = info.get("direccion", "(sin dirección)")
+        telefono = info.get("telefono", "")
+        self.lbl_sucursal_info.configure(text=f"Dirección: {direccion} {'- Tel:' + telefono if telefono else ''}")
 
     def limpiar_detalle(self):
         self.lbl_nombre.configure(text="Producto: -")
