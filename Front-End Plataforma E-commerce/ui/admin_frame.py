@@ -41,13 +41,18 @@ class AdminFrame(ctk.CTkFrame):
         ctk.CTkButton(btns_u, text="Refrescar", command=self.refrescar_usuarios).pack(side="right", padx=6)
 
         ctk.CTkLabel(izquierda, text="Sucursales", font=ctk.CTkFont(size=14, weight="bold")).pack(anchor="w", padx=6, pady=(12,2))
-        self.sucursales_box = ctk.CTkTextbox(izquierda, height=120, state="disabled")
-        self.sucursales_box.pack(fill="both", padx=6, pady=6)
+        # Ajuste: altura reducida para que los botones no se oculten
+        self.sucursales_box = ctk.CTkTextbox(izquierda, height=100, state="disabled")
+        self.sucursales_box.pack(fill="both", padx=6, pady=(6, 4))
+
+        # Aseguramos que el frame de botones se vea siempre
         btns_s = ctk.CTkFrame(izquierda)
-        btns_s.pack(fill="x", padx=6, pady=6)
-        ctk.CTkButton(btns_s, text="Agregar sucursal", command=self.agregar_sucursal).pack(side="left", padx=6)
-        ctk.CTkButton(btns_s, text="Eliminar sucursal", command=self.eliminar_sucursal).pack(side="left", padx=6)
-        ctk.CTkButton(btns_s, text="Refrescar", command=self.refrescar_sucursales).pack(side="right", padx=6)
+        btns_s.pack(fill="x", padx=6, pady=(0, 6))
+
+        ctk.CTkButton(btns_s, text="Agregar sucursal", command=self.agregar_sucursal).pack(side="left", padx=4)
+        ctk.CTkButton(btns_s, text="Editar sucursal", command=self.editar_sucursal).pack(side="left", padx=4)
+        ctk.CTkButton(btns_s, text="Eliminar sucursal", command=self.eliminar_sucursal).pack(side="left", padx=4)
+        ctk.CTkButton(btns_s, text="Refrescar", command=self.refrescar_sucursales).pack(side="right", padx=4)
 
         # Derecha: productos (separados por categoría)
         derecha = ctk.CTkFrame(cont)
@@ -95,18 +100,19 @@ class AdminFrame(ctk.CTkFrame):
         self.productos_box.configure(state="disabled")
 
     def refrescar_sucursales(self):
-        productos = DataManager.cargar_productos()
-        sucursales = DataManager.obtener_sucursales(productos)
+        sucursales = DataManager.cargar_sucursales()
         self.sucursales_box.configure(state="normal")
         self.sucursales_box.delete("0.0", "end")
-        for s in sucursales:
-            self.sucursales_box.insert("end", f"{s}\n")
+        for nombre, datos in sucursales.items():
+            direccion = datos.get("direccion","")
+            telefono = datos.get("telefono","")
+            self.sucursales_box.insert("end", f"{nombre} - {direccion} - {telefono}\n")
         self.sucursales_box.configure(state="disabled")
 
     # Usuarios
     def eliminar_usuario(self):
         top = ctk.CTkToplevel(self)
-        top.title("Eliminar Sucursal")
+        top.title("Eliminar Usuario")
         top.geometry("700x300+200+50")
         top.resizable(False, False)
 
@@ -129,26 +135,28 @@ class AdminFrame(ctk.CTkFrame):
 
             # Buscar usuario por email
             usuario_encontrado = None
+            datos_usuario = None
             for usuario, datos in usuarios.items():
                 if datos.get("email") == email:
                     usuario_encontrado = usuario
+                    datos_usuario = datos
                     break
 
             if not usuario_encontrado:
                 messagebox.showerror("Error", "Usuario no encontrado.")
                 return
 
-            if datos.get("rol") == "admin":
+            if datos_usuario.get("rol") == "admin":
                 messagebox.showwarning("Protegido", "No se puede eliminar al administrador.")
                 return
 
-            confirm = messagebox.askyesno("Confirmar", f"¿Eliminar usuario '{datos.get('nombre')}' ({email})?")
+            confirm = messagebox.askyesno("Confirmar", f"¿Eliminar usuario '{datos_usuario.get('nombre')}' ({email})?")
             if not confirm:
                 return
 
             del usuarios[usuario_encontrado]
             DataManager.guardar_usuarios(usuarios)
-            messagebox.showinfo("OK", f"Usuario '{datos.get('nombre')}' eliminado correctamente.")
+            messagebox.showinfo("OK", f"Usuario '{datos_usuario.get('nombre')}' eliminado correctamente.")
             top.destroy()
             self.refrescar_usuarios()
         
@@ -159,7 +167,7 @@ class AdminFrame(ctk.CTkFrame):
     def agregar_sucursal(self):
         top = ctk.CTkToplevel(self)
         top.title("Agregar Sucursal")
-        top.geometry("700x300+200+50")
+        top.geometry("700x320+200+50")
         top.resizable(False, False)
 
         top.transient(self.master)
@@ -167,27 +175,93 @@ class AdminFrame(ctk.CTkFrame):
         top.focus_set()
         top.lift()
 
-        tk.Label(top, text="Nombre:", font="arial 12 bold", fg="white", bg=top["bg"]).place(x=150, y=100, width=80, height=25)
+        tk.Label(top, text="Nombre:", font="arial 12 bold", fg="white", bg=top["bg"]).place(x=80, y=40, width=120, height=25)
         entry_nombre = ttk.Entry(top, font="arial 12 bold")
-        entry_nombre.place(x=260, y=100, width=250, height=30)
+        entry_nombre.place(x=220, y=40, width=350, height=30)
+
+        tk.Label(top, text="Dirección:", font="arial 12 bold", fg="white", bg=top["bg"]).place(x=80, y=90, width=120, height=25)
+        entry_direccion = ttk.Entry(top, font="arial 12 bold")
+        entry_direccion.place(x=220, y=90, width=350, height=30)
+
+        tk.Label(top, text="Teléfono:", font="arial 12 bold", fg="white", bg=top["bg"]).place(x=80, y=140, width=120, height=25)
+        entry_telefono = ttk.Entry(top, font="arial 12 bold")
+        entry_telefono.place(x=220, y=140, width=350, height=30)
 
         def agregar():
-            nombre = entry_nombre.get()
+            nombre = entry_nombre.get().strip()
+            direccion = entry_direccion.get().strip()
+            telefono = entry_telefono.get().strip()
             if not nombre:
-                messagebox.showerror ("Error", "Debe completar el campo")
+                messagebox.showerror ("Error", "Debe completar el campo nombre")
                 return
-
-            ok = DataManager.agregar_sucursal(nombre)
-            if not ok:
-                messagebox.showinfo("OK", "Sucursal agregada (stock inicial 0 en productos).")
-                top. destroy()
+            ok, msg = DataManager.agregar_sucursal(nombre, direccion=direccion, telefono=telefono)
+            if ok:
+                messagebox.showinfo("OK", msg)
+                top.destroy()
                 self.refrescar_productos()
                 self.refrescar_sucursales()
             else:
-                messagebox.showerror("Error", "Ya existe la sucursal.")
+                messagebox.showerror("Error", msg)
 
-        tk.Button(top, text="Guardar", font="arial 12 bold", command=agregar, fg="white", bg="#2E8B64").place(x=150, y=180, width=150, height=40)
-        tk.Button(top, text="Cancelar", font="arial 12 bold", command=top.destroy, fg="white", bg="#2E8B64").place(x=350, y=180, width=150, height=40)
+        tk.Button(top, text="Guardar", font="arial 12 bold", command=agregar, fg="white", bg="#2E8B64").place(x=180, y=220, width=150, height=40)
+        tk.Button(top, text="Cancelar", font="arial 12 bold", command=top.destroy, fg="white", bg="#2E8B64").place(x=370, y=220, width=150, height=40)
+
+    def editar_sucursal(self):
+        top = ctk.CTkToplevel(self)
+        top.title("Editar Sucursal")
+        top.geometry("700x360+200+50")
+        top.resizable(False, False)
+
+        top.transient(self.master)
+        top.grab_set()
+        top.focus_set()
+        top.lift()
+
+        sucursales = DataManager.cargar_sucursales()
+        nombres = list(sucursales.keys())
+        if not nombres:
+            messagebox.showinfo("Info", "No hay sucursales para editar.")
+            top.destroy()
+            return
+
+        nombre_var = ctk.StringVar(value=nombres[0])
+
+        ctk.CTkLabel(top, text="Sucursal:", width=100, height=25).place(x=40, y=30)
+        ctk.CTkOptionMenu(top, values=nombres, variable=nombre_var, width=400).place(x=150, y=30)
+
+        tk.Label(top, text="Dirección:", font="arial 12 bold", fg="white", bg=top["bg"]).place(x=40, y=80, width=120, height=25)
+        entry_direccion = ttk.Entry(top, font="arial 12 bold")
+        entry_direccion.place(x=150, y=80, width=400, height=30)
+
+        tk.Label(top, text="Teléfono:", font="arial 12 bold", fg="white", bg=top["bg"]).place(x=40, y=130, width=120, height=25)
+        entry_telefono = ttk.Entry(top, font="arial 12 bold")
+        entry_telefono.place(x=150, y=130, width=400, height=30)
+
+        def cargar_actual(_=None):
+            sel = nombre_var.get()
+            datos = sucursales.get(sel, {})
+            entry_direccion.delete(0, "end")
+            entry_telefono.delete(0, "end")
+            entry_direccion.insert(0, datos.get("direccion", ""))
+            entry_telefono.insert(0, datos.get("telefono", ""))
+
+        cargar_actual()
+        nombre_var.trace("w", lambda *a: cargar_actual())
+
+        def guardar():
+            sel = nombre_var.get()
+            direccion = entry_direccion.get().strip()
+            telefono = entry_telefono.get().strip()
+            ok, msg = DataManager.editar_sucursal(sel, direccion=direccion, telefono=telefono)
+            if ok:
+                messagebox.showinfo("OK", msg)
+                top.destroy()
+                self.refrescar_sucursales()
+            else:
+                messagebox.showerror("Error", msg)
+
+        tk.Button(top, text="Guardar", font="arial 12 bold", command=guardar, fg="white", bg="#2E8B64").place(x=180, y=220, width=150, height=40)
+        tk.Button(top, text="Cancelar", font="arial 12 bold", command=top.destroy, fg="white", bg="#2E8B64").place(x=370, y=220, width=150, height=40)
 
     def eliminar_sucursal(self):
         top = ctk.CTkToplevel(self)
@@ -222,7 +296,7 @@ class AdminFrame(ctk.CTkFrame):
         tk.Button(top, text="Eliminar", font="arial 12 bold", command=eliminar, fg="white", bg="#2E8B64").place(x=150, y=180, width=150, height=40)
         tk.Button(top, text="Cancelar", font="arial 12 bold", command=top.destroy, fg="white", bg="#2E8B64").place(x=350, y=180, width=150, height=40)
 
-    # Productos
+    # Productos (resto del archivo sin cambios funcionales importantes)
     def load_image(self):
         file_path = filedialog.askopenfilename()
         if file_path:
@@ -241,8 +315,9 @@ class AdminFrame(ctk.CTkFrame):
             img_label.place(x=0, y=0, width=200, height=200)
     
     def agregar_producto(self):
+        # Implementación para agregar productos (igual que antes, con validaciones)
         top = ctk.CTkToplevel(self)
-        top.title("Agregar articulo")
+        top.title("Agregar artículo")
         top.geometry("700x400+200+50")
         top.resizable(False, False)
 
@@ -253,12 +328,12 @@ class AdminFrame(ctk.CTkFrame):
 
         self.image_path = None 
 
-        #Obtener lista de categorias
+        #Obtener lista de categorías
         categorias = DataManager.obtener_categorias(DataManager.cargar_productos())
         valor_inicial = categorias[0] if categorias else ""
         self.categoria_var = ctk.StringVar(value=valor_inicial) 
 
-        tk.Label(top, text="Categoria:", font="arial 12 bold", fg="white", bg=top["bg"], anchor=tk.W).place(x=20, y=40, width=80, height=25)
+        tk.Label(top, text="Categoría:", font="arial 12 bold", fg="white", bg=top["bg"], anchor=tk.W).place(x=20, y=40, width=80, height=25)
         entry_categoria = ctk.CTkOptionMenu(master=top, values=categorias, variable=self.categoria_var, width=250, height=30)
         entry_categoria.place(x=125, y=40)
 
@@ -270,7 +345,7 @@ class AdminFrame(ctk.CTkFrame):
         entry_precio = ttk.Entry(top, font="arial 12 bold")
         entry_precio.place(x=125, y=120, width=250, height=30)
 
-        tk.Label(top, text="Descripcion: ", font="arial 12 bold", fg="white", bg=top["bg"], anchor=tk.W).place(x=20, y=160, width=100, height=25)
+        tk.Label(top, text="Descripción: ", font="arial 12 bold", fg="white", bg=top["bg"], anchor=tk.W).place(x=20, y=160, width=100, height=25)
         text_desc = tk.Text(top, font="arial 12")
         text_desc.place(x=125, y=160, width=250, height=78)
 
@@ -370,7 +445,7 @@ class AdminFrame(ctk.CTkFrame):
         valor_inicial = categorias[0] if categorias else ""
         self.categoria_var = ctk.StringVar(value=valor_inicial) 
 
-        tk.Label(top, text="Categoria:", font="arial 12 bold", fg="white", bg=top["bg"]).place(x=150, y=60, width=80, height=25)
+        tk.Label(top, text="Categoría:", font="arial 12 bold", fg="white", bg=top["bg"]).place(x=150, y=60, width=80, height=25)
         entry_categoria = ctk.CTkOptionMenu(master=top, values=categorias, variable=self.categoria_var, width=250, height=30)
         entry_categoria.place(x=260, y=60)
 
@@ -402,7 +477,7 @@ class AdminFrame(ctk.CTkFrame):
             try:
                 stock = float (nuevo)
             except ValueError:
-                messagebox. showerror ("Error", "stock deben ser numeros validos")
+                messagebox. showerror ("Error", "Stock debe ser un número valido")
                 return
 
             ok = DataManager.actualizar_stock(categoria, nombre, sucursal, stock)
@@ -432,7 +507,7 @@ class AdminFrame(ctk.CTkFrame):
         valor_inicial = categorias[0] if categorias else ""
         self.categoria_var = ctk.StringVar(value=valor_inicial) 
 
-        tk.Label(top, text="Categoria:", font="arial 12 bold", fg="white", bg=top["bg"]).place(x=150, y=60, width=80, height=25)
+        tk.Label(top, text="Categoría:", font="arial 12 bold", fg="white", bg=top["bg"]).place(x=150, y=60, width=80, height=25)
         entry_categoria = ctk.CTkOptionMenu(master=top, values=categorias, variable=self.categoria_var, width=250, height=30)
         entry_categoria.place(x=260, y=60)
 
@@ -456,6 +531,5 @@ class AdminFrame(ctk.CTkFrame):
                 self.refrescar_sucursales()
             else:
                 messagebox.showerror("Error", "No se encontró el producto.")
-
         tk.Button(top, text="Eliminar producto", font="arial 12 bold", command=eliminar, fg="white", bg="#2E8B64").place(x=150, y=180, width=150, height=40)
         tk.Button(top, text="Cancelar", font="arial 12 bold", command=top.destroy, fg="white", bg="#2E8B64").place(x=350, y=180, width=150, height=40)
