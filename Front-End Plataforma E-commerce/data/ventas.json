@@ -19,35 +19,6 @@
       "fecha": "2025-11-06 21:09:46"
     }
   ],
-  "rolo": [
-    {
-      "categoria": "Celulares",
-      "producto": "Samsung S24 ",
-      "cantidad": 2,
-      "sucursal": "Sucursal Centro",
-      "metodo_pago": "efectivo",
-      "total": 2000000.0,
-      "fecha": "2025-11-07 17:25:47"
-    },
-    {
-      "categoria": "Accesorios",
-      "producto": "Funda Protectora",
-      "cantidad": 2,
-      "sucursal": "Sucursal Sur",
-      "metodo_pago": "efectivo",
-      "total": 39.8,
-      "fecha": "2025-11-07 17:25:47"
-    },
-    {
-      "categoria": "Celulares",
-      "producto": "Teléfono Modelo B",
-      "cantidad": 2,
-      "sucursal": "Sucursal Centro",
-      "metodo_pago": "efectivo",
-      "total": 1399.8,
-      "fecha": "2025-11-07 21:51:05"
-    }
-  ],
   "cliente": [
     {
       "categoria": "Celulares",
