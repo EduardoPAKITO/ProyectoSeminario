@@ -18,7 +18,7 @@
       "descripcion": "Celular Samsung A56 8GB RAM, 256 GB de almacenamiento interno",
       "stock_por_sucursal": {
         "Sucursal Centro": 3,
-        "Sucursal Norte": 1,
+        "Sucursal Norte": 0,
         "Sucursal Sur": 0
       }
     },
@@ -61,8 +61,8 @@
       "imagen": "Captura de pantalla 2025-09-12 220527.png",
       "descripcion": "Celular Samsung A56 8GB RAM, 256 GB de almacenamiento interno",
       "stock_por_sucursal": {
-        "Sucursal Centro": 3,
-        "Sucursal Norte": 1,
+        "Sucursal Centro": 1,
+        "Sucursal Norte": 0,
         "Sucursal Sur": 0
       }
     }
