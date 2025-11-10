@@ -27,7 +27,7 @@ class App(ctk.CTk):
         # header
         header = ctk.CTkFrame(self)
         header.pack(fill="x", padx=8, pady=6)
-        self.lbl_titulo = ctk.CTkLabel(header, text="Tienda - Los Pibes del Seminario", font=ctk.CTkFont(size=18, weight="bold"))
+        self.lbl_titulo = ctk.CTkLabel(header, text="Tienda - Los Pibes de Seminario", font=ctk.CTkFont(size=18, weight="bold"))
         self.lbl_titulo.pack(side="left", padx=8)
         self.lbl_sesion = ctk.CTkLabel(header, text="No conectado")
         self.lbl_sesion.pack(side="left", padx=8)
@@ -61,7 +61,7 @@ class App(ctk.CTk):
         self.tabview = ctk.CTkTabview(self.contenedor_principal)
         self.tabview.pack(fill="both", expand=True)
         # Siempre: Catálogo; si cliente: Carrito y Mi Perfil; si admin: Administracion
-        self.tabview.add("Catálogo")
+        self.tabview.add("Catálogo y Compra")
         if rol != "admin":
             self.tabview.add("Carrito")
             self.tabview.add("Mi Perfil")
@@ -71,9 +71,9 @@ class App(ctk.CTk):
         # Instanciar frames dentro de pestañas
         # pasar callback para agregar al carrito a ClienteFrame
         if rol == "admin":
-            self.frame_cliente = ClienteFrame(self.tabview.tab("Catálogo"), self.get_usuario_actual, add_to_cart_callback=None, role="admin")
+            self.frame_cliente = ClienteFrame(self.tabview.tab("Catálogo y Compra"), self.get_usuario_actual, add_to_cart_callback=None, role="admin")
         else:
-            self.frame_cliente = ClienteFrame(self.tabview.tab("Catálogo"), self.get_usuario_actual, add_to_cart_callback=self.agregar_al_carrito, role="cliente")
+            self.frame_cliente = ClienteFrame(self.tabview.tab("Catálogo y Compra"), self.get_usuario_actual, add_to_cart_callback=self.agregar_al_carrito, role="cliente")
         self.frame_cliente.pack(fill="both", expand=True)
 
         if rol != "admin":
@@ -159,8 +159,8 @@ class App(ctk.CTk):
         usuario = self.get_usuario_actual()
         errores = []
         total = 0.0
-        # primero validar stock (pre-check)
         productos = DataManager.cargar_productos()
+        # verificar el stock y sumar totales
         for it in carrito:
             cat = it["categoria"]
             nombre = it["producto"]
@@ -176,13 +176,15 @@ class App(ctk.CTk):
             total += prod.get("precio", 0) * cant
         if errores:
             return False, "\n".join(errores)
-        # aplicar forma de pago a total (registro separable por item)
+        # aplicar forma de pago a total
         total_final = total
-        if forma_pago == "efectivo":
+        if forma_pago == "Efectivo":
             total_final = total * 0.90
-        elif forma_pago == "credito":
+        elif forma_pago == "Crédito":
             total_final = total * 1.05
-        # ahora proceder: reducir stock y registrar ventas
+        # factor para distribuir el total_final proporcionalmente entre los items
+        factor = (total_final / total) if total > 0 else 1.0
+        # proceder: reducir stock y registrar ventas (grabando el total ajustado por item)
         for it in carrito:
             cat = it["categoria"]
             nombre = it["producto"]
@@ -190,13 +192,13 @@ class App(ctk.CTk):
             cant = int(it["cantidad"])
             prod = productos.get(cat, {}).get(nombre)
             precio_unit = prod.get("precio", 0)
+            subtotal = precio_unit * cant
+            subtotal_ajustado = subtotal * factor
             ok, msg = DataManager.reducir_stock_al_comprar(cat, nombre, suc, cant)
             if not ok:
-                # rollback no implementado (simple) -> informar error
                 return False, msg
-            # registrar venta por cada item (registro por usuario)
-            DataManager.registrar_venta(usuario, cat, nombre, cant, suc, forma_pago, precio_unit * cant)
-        # guardar productos ya hecho dentro de reducir_stock_al_comprar -> DataManager guarda
+            # registrar venta con subtotal ajustado (para que el historial conserve el precio según forma de pago)
+            DataManager.registrar_venta(usuario, cat, nombre, cant, suc, forma_pago, subtotal_ajustado)
         return True, f"Compra realizada. Total cobrado: ${total_final:.2f}"
 
 if __name__ == "__main__":
