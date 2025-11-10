@@ -53,6 +53,12 @@ class PerfilFrame(ctk.CTkFrame):
             self.historial_box.insert("end", "Todavía no realizaste una compra.\n")
         else:
             for c in compras:
-                linea = f"{c.get('fecha')} - {c.get('categoria')} / {c.get('producto')} x{c.get('cantidad')} - {c.get('sucursal')} - {c.get('metodo_pago')} - ${c.get('total'):.2f}\n"
+                total = c.get("total", 0.0)
+                linea = (
+                    f"{c.get('fecha')} - {c.get('categoria')} / {c.get('producto')} "
+                    f"x{c.get('cantidad')} - {c.get('sucursal')} - "
+                    f"{c.get('metodo_pago')} - Total pagado: ${total:.2f}\n"
+                )
                 self.historial_box.insert("end", linea)
         self.historial_box.configure(state="disabled")
+
