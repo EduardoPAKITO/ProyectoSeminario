@@ -46,20 +46,43 @@ class LoginFrame(ctk.CTkFrame):
         self.funcion_on_login(usuario, info.get("rol", "cliente")) #si no existe devuelve cliente por defecto
 
     def crear_cuenta_cliente(self):
-        usuario = simpledialog.askstring("Crear cuenta", "Nombre de usuario:", parent=self)
-        if not usuario:
-            return
-        email = simpledialog.askstring("Crear cuenta", "Email:", parent=self)
-        if not email:
-            return
-        nombre = simpledialog.askstring("Crear cuenta", "Nombre completo:", parent=self)
-        if not nombre:
-            return
-        clave = simpledialog.askstring("Crear cuenta", "Contraseña:", parent=self, show="*")
-        if not clave:
-            return
-        ok, msg = DataManager.crear_usuario_cliente(usuario, clave, email=email, nombre=nombre)
-        if ok:
-            messagebox.showinfo("Cuenta creada", msg)
-        else:
-            messagebox.showerror("Error", msg)
+        top = ctk.CTkToplevel(self)
+        top.title("Crear cuenta")
+        top.geometry("420x420")
+        top.resizable(False, False)
+        top.transient(self.master)
+        top.grab_set()
+        top.focus_set()
+
+        ctk.CTkLabel(top, text="Email:").pack(pady=(20,0))
+        entry_email = ctk.CTkEntry(top, width=340)
+        entry_email.pack(pady=5)
+
+        ctk.CTkLabel(top, text="Nombre completo:").pack(pady=(10,0))
+        entry_nombre = ctk.CTkEntry(top, width=340)
+        entry_nombre.pack(pady=5)
+
+        ctk.CTkLabel(top, text="Nombre de usuario:").pack(pady=(10,0))
+        entry_usuario = ctk.CTkEntry(top, width=340)
+        entry_usuario.pack(pady=5)
+
+        ctk.CTkLabel(top, text="Clave de Ingreso:").pack(pady=(10,0))
+        entry_clave = ctk.CTkEntry(top, width=340, show="*")
+        entry_clave.pack(pady=5)
+
+        def guardar():
+            email = entry_email.get().strip()
+            clave = entry_clave.get().strip()
+            usuario = entry_usuario.get().strip()
+            nombre = entry_nombre.get().strip()
+            if not email or not clave or not usuario or not nombre:
+                messagebox.showerror("Error", "Completar todos los campos.")
+                return
+            ok, msg = DataManager.crear_usuario_cliente(usuario, clave, email=email, nombre=nombre)
+            if ok:
+                messagebox.showinfo("Cuenta creada", msg)
+                top.destroy()
+            else:
+                messagebox.showerror("Error", msg)
+
+        ctk.CTkButton(top, text="Crear cuenta", fg_color="#2E8B64", hover_color="#256b4f", command=guardar).pack(pady=20)
