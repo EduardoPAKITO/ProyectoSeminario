@@ -4,9 +4,7 @@ import os
 import uuid
 from datetime import datetime
 
-
 class DataManager:
-    # Rutas CORREGIDAS - relativas al directorio del proyecto
     """""
     Atributos de Clase:
         BASE_DIR (str): Directorio raíz del proyecto
@@ -16,11 +14,13 @@ class DataManager:
         RUTA_VENTAS (str): Ruta al archivo JSON de ventas
         CARPETA_IMAGENES (str): Ruta a la carpeta de imágenes
     """""
+    # Rutas CORREGIDAS - relativas al directorio del proyecto
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # Directorio raíz del proyecto
     DATA_DIR = os.path.join(BASE_DIR, "data")
     RUTA_USUARIOS = os.path.join(DATA_DIR, "usuarios.csv")
     RUTA_PRODUCTOS = os.path.join(DATA_DIR, "productos.json")
     RUTA_VENTAS = os.path.join(DATA_DIR, "ventas.json")
+    RUTA_SUCURSALES = os.path.join(DATA_DIR, "sucursales.json")
     CARPETA_IMAGENES = os.path.join(BASE_DIR, "images")
 
     @staticmethod
@@ -29,23 +29,24 @@ class DataManager:
         os.makedirs(DataManager.DATA_DIR, exist_ok=True)
         os.makedirs(DataManager.CARPETA_IMAGENES, exist_ok=True)
         DataManager._asegurar_archivo_usuarios()
-        DataManager._asegurar_productos_iniciales()
+        # NOTA: se comenta la inicialización automática de productos para no sobreescribir productos reales
+        # DataManager._asegurar_productos_iniciales()
         DataManager._asegurar_archivo_ventas()
+        DataManager._asegurar_archivo_sucursales()
 
     @staticmethod
     def _asegurar_archivo_usuarios():
-        # ahora con columnas: usuario, clave, rol, email, nombre
         if not os.path.exists(DataManager.RUTA_USUARIOS):
             with open(DataManager.RUTA_USUARIOS, "w", newline="", encoding="utf-8") as f:
                 writer = csv.writer(f)
                 writer.writerow(["usuario", "clave", "rol", "email", "nombre"])
-                writer.writerow(["admin", "admin", "admin",
-                                "admin@local", "Administrador"])
-                writer.writerow(
-                    ["cliente", "cliente", "cliente", "cliente@local", "Cliente"])
+                writer.writerow(["admin", "admin", "admin", "admin@local", "Administrador"])
+                writer.writerow(["cliente", "cliente", "cliente", "cliente@local", "Cliente"])
 
     @staticmethod
     def _asegurar_productos_iniciales():
+        # Esta función crea un productos.json de ejemplo. Se dejó implementada por compatibilidad,
+        # pero su llamado fue comentado en asegurar_archivos() para evitar sobreescribir datos reales.
         if not os.path.exists(DataManager.RUTA_PRODUCTOS):
             ejemplo = {
                 "Celulares": {
@@ -83,10 +84,22 @@ class DataManager:
             with open(DataManager.RUTA_VENTAS, "w", encoding="utf-8") as f:
                 json.dump({}, f, indent=2, ensure_ascii=False)
 
+    @staticmethod
+    def _asegurar_archivo_sucursales():
+        # Nuevo archivo para guardar sucursales con dirección y teléfono
+        if not os.path.exists(DataManager.RUTA_SUCURSALES):
+            ejemplo = {
+                "Sucursal Centro": {"direccion": "Av. Principal 123", "telefono": "000-000"},
+                "Sucursal Norte": {"direccion": "Ruta 9 km 10", "telefono": "111-111"}
+            }
+            with open(DataManager.RUTA_SUCURSALES, "w", encoding="utf-8") as f:
+                json.dump(ejemplo, f, indent=2, ensure_ascii=False)
+
     # Métodos para usuarios
     @staticmethod
     def cargar_usuarios():
         usuarios = {}
+        # Acepta archivos con o sin email/nombre
         if not os.path.exists(DataManager.RUTA_USUARIOS):
             return usuarios
         with open(DataManager.RUTA_USUARIOS, newline="", encoding="utf-8") as f:
@@ -106,8 +119,8 @@ class DataManager:
             writer = csv.writer(f)
             writer.writerow(["usuario", "clave", "rol", "email", "nombre"])
             for usuario, info in dic_usuarios.items():
-                writer.writerow([usuario, info.get("clave", ""), info.get("rol", "cliente"),
-                                 info.get("email", ""), info.get("nombre", "")])
+                writer.writerow([usuario, info.get("clave",""), info.get("rol","cliente"),
+                                 info.get("email",""), info.get("nombre","")])
 
     @staticmethod
     def crear_usuario_cliente(usuario, clave, email="", nombre=""):
@@ -122,13 +135,11 @@ class DataManager:
             if info.get("nombre") and nombre and info.get("nombre").strip().lower() == nombre.strip().lower() and u != usuario:
                 # previene crear varias cuentas con mismo nombre "visible"
                 return False, "Ya existe una cuenta con el mismo nombre."
-        usuarios[usuario] = {"clave": clave,
-                             "rol": "cliente", "email": email, "nombre": nombre}
+        usuarios[usuario] = {"clave": clave, "rol": "cliente", "email": email, "nombre": nombre}
         DataManager.guardar_usuarios(usuarios)
-        return True, "Usuario creado correctamente."
+        return True, "Usuario cliente creado correctamente."
 
-    # Métodos para productos
-
+    # Métodos para productos y sucursales
     @staticmethod
     def cargar_productos():
         if not os.path.exists(DataManager.RUTA_PRODUCTOS):
@@ -142,32 +153,52 @@ class DataManager:
             json.dump(dic_productos, f, indent=2, ensure_ascii=False)
 
     @staticmethod
-    def obtener_sucursales(dic_productos):
-        """Devuelve la lista única de sucursales encontradas en todos los productos."""
-        sucursales = set()
-        for categoria, productos in dic_productos.items():
-            for p in productos.values():
-                for s in p.get("stock_por_sucursal", {}).keys():
-                    sucursales.add(s)
-        return sorted(list(sucursales))
+    def obtener_categorias(dic_productos=None):
+        if dic_productos is None:
+            dic_productos = DataManager.cargar_productos()
+        return list(dic_productos.keys())
 
     @staticmethod
-    def obtener_categorias(dic_productos):
-        """Devuelve la lista única de categorias encontradas en todos los productos."""
-        categorias = set()
-        for c, productos in dic_productos.items():
-            categorias.add(c)
-        return sorted(list(categorias))
+    def obtener_sucursales(dic_productos=None):
+        sucursales = []
+        if os.path.exists(DataManager.RUTA_SUCURSALES):
+            with open(DataManager.RUTA_SUCURSALES, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                sucursales = sorted(list(data.keys()))
+        else:
+            # Fallback: obtener de productos
+            if dic_productos is None:
+                dic_productos = DataManager.cargar_productos()
+            s = set()
+            for categoria, productos in dic_productos.items():
+                for p in productos.values():
+                    for suc in p.get("stock_por_sucursal", {}).keys():
+                        s.add(suc)
+            sucursales = sorted(list(s))
+        return sucursales
 
     @staticmethod
-    def agregar_sucursal(nueva_sucursal):
+    def cargar_sucursales():
+        if not os.path.exists(DataManager.RUTA_SUCURSALES):
+            return {}
+        with open(DataManager.RUTA_SUCURSALES, "r", encoding="utf-8") as f:
+            return json.load(f)
+
+    @staticmethod
+    def guardar_sucursales(dic_sucursales):
+        with open(DataManager.RUTA_SUCURSALES, "w", encoding="utf-8") as f:
+            json.dump(dic_sucursales, f, indent=2, ensure_ascii=False)
+
+    @staticmethod
+    def agregar_sucursal(nueva_sucursal, direccion="", telefono=""):
+        # Agrega la sucursal en sucursales.json y la añade con stock 0 en productos existentes
+        sucursales = DataManager.cargar_sucursales()
+        if nueva_sucursal in sucursales:
+            return False, "La sucursal ya existe."
+        sucursales[nueva_sucursal] = {"direccion": direccion, "telefono": telefono}
+        DataManager.guardar_sucursales(sucursales)
+
         productos = DataManager.cargar_productos()
-        # Verificar si la sucursal ya existe en algún producto
-        for categoria, lista in productos.items():
-            for nombre, datos in lista.items():
-                if "stock_por_sucursal" in datos and nueva_sucursal in datos["stock_por_sucursal"]:
-                    return True
-
         for categoria, lista in productos.items():
             for nombre, datos in lista.items():
                 if "stock_por_sucursal" not in datos:
@@ -175,30 +206,40 @@ class DataManager:
                 if nueva_sucursal not in datos["stock_por_sucursal"]:
                     datos["stock_por_sucursal"][nueva_sucursal] = 0
         DataManager.guardar_productos(productos)
-        return False
+        return True, "Sucursal agregada."
+
+    @staticmethod
+    def editar_sucursal(nombre, direccion=None, telefono=None):
+        sucursales = DataManager.cargar_sucursales()
+        if nombre not in sucursales:
+            return False, "Sucursal no encontrada."
+        if direccion is not None:
+            sucursales[nombre]["direccion"] = direccion
+        if telefono is not None:
+            sucursales[nombre]["telefono"] = telefono
+        DataManager.guardar_sucursales(sucursales)
+        return True, "Sucursal actualizada."
 
     @staticmethod
     def eliminar_sucursal(sucursal):
-        existe = False
+        # Elimina la sucursal de sucursales.json y de stock en productos
+        sucursales = DataManager.cargar_sucursales()
+        if sucursal in sucursales:
+            del sucursales[sucursal]
+            DataManager.guardar_sucursales(sucursales)
         productos = DataManager.cargar_productos()
-        # Verificar si la sucursal ya existe en algún producto
+        changed = False
         for categoria, lista in productos.items():
             for nombre, datos in lista.items():
                 if "stock_por_sucursal" in datos and sucursal in datos["stock_por_sucursal"]:
-                    existe = True
-                    break
-        if existe:       
-            for categoria, lista in productos.items():
-                for nombre, datos in lista.items():
-                    if "stock_por_sucursal" in datos and sucursal in datos["stock_por_sucursal"]:
-                        del datos["stock_por_sucursal"][sucursal]
+                    del datos["stock_por_sucursal"][sucursal]
+                    changed = True
+        if changed:
             DataManager.guardar_productos(productos)
-            return True
-        else:
-            return False
+        return True
 
     @staticmethod
-    def agregar_producto(categoria, nombre, precio, imagen_archivo, stock_por_sucursal, descripcion):
+    def agregar_producto(categoria, nombre, precio, imagen_archivo, stock_por_sucursal, descripcion=""):
         productos = DataManager.cargar_productos()
         if categoria not in productos:
             productos[categoria] = {}
@@ -219,20 +260,6 @@ class DataManager:
     def eliminar_producto(categoria, nombre):
         productos = DataManager.cargar_productos()
         if categoria in productos and nombre in productos[categoria]:
-            producto = productos[categoria][nombre]
-            # Verificar si tiene imagen asociada
-            image_path = producto.get("imagen", "")
-            if image_path:
-                nombre_imagen = os.path.basename(image_path) # Obtener solo el nombre del archivo
-                if nombre_imagen not in ("default.jpg", "default2.png"): # No borrar si es una de las imágenes por defecto
-                    ruta_imagen = os.path.join(DataManager.CARPETA_IMAGENES, nombre_imagen)
-                    # Borrar el archivo solo si realmente existe
-                    if os.path.exists(ruta_imagen):
-                        try:
-                            os.remove(ruta_imagen)
-                        except Exception as e:
-                            print(f"No se pudo eliminar la imagen '{ruta_imagen}': {e}")
-            # Eliminar el producto del diccionario
             del productos[categoria][nombre]
             DataManager.guardar_productos(productos)
             return True
@@ -252,8 +279,7 @@ class DataManager:
     def reducir_stock_al_comprar(categoria, nombre, sucursal, cantidad):
         productos = DataManager.cargar_productos()
         if categoria in productos and nombre in productos[categoria]:
-            actual = productos[categoria][nombre].get(
-                "stock_por_sucursal", {}).get(sucursal, 0)
+            actual = productos[categoria][nombre].get("stock_por_sucursal", {}).get(sucursal, 0)
             if cantidad > actual:
                 return False, f"Stock insuficiente en {sucursal}. Disponible: {actual}"
             productos[categoria][nombre]["stock_por_sucursal"][sucursal] = actual - cantidad
@@ -296,3 +322,4 @@ class DataManager:
     def obtener_ventas_por_usuario(usuario):
         ventas = DataManager.cargar_ventas()
         return ventas.get(usuario, [])
+
