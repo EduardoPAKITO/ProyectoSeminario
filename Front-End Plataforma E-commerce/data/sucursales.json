@@ -1,0 +1,14 @@
+{
+  "Sucursal Centro": {
+    "direccion": "Av. Principal 123",
+    "telefono": "388-123-241"
+  },
+  "Sucursal Norte": {
+    "direccion": "Ruta 9 km 10",
+    "telefono": "111-111"
+  },
+  "Sucursal Sur": {
+    "direccion": "Ítalo Palanca 456",
+    "telefono": "222-222"
+  }
+}
