@@ -1,3 +1,4 @@
+#_init_.py
 # Este archivo hace que la carpeta modelos sea un paquete Python
 from .usuario import Usuario
 from .producto import Producto
