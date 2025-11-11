@@ -2,7 +2,7 @@
 import tkinter as tk
 import customtkinter as ctk
 from data.data_manager import DataManager
-from tkinter import ttk, messagebox, simpledialog, filedialog
+from tkinter import ttk, messagebox, filedialog
 from PIL import Image, ImageTk
 import os
 
@@ -18,6 +18,7 @@ class AdminFrame(ctk.CTkFrame):
         self._construir()
 
     def _construir(self):
+        refresh_img = ctk.CTkImage(Image.open(os.path.join(CARPETA_IMAGENES, "icono.png")), size=(20, 20))
         # panel superior con botones
         top = ctk.CTkFrame(self)
         top.pack(fill="x", padx=8, pady=8)
@@ -38,7 +39,8 @@ class AdminFrame(ctk.CTkFrame):
         btns_u.pack(fill="x", padx=6, pady=6)
         # SE QUITA boton Agregar cliente 
         ctk.CTkButton(btns_u, text="Eliminar usuario", command=self.eliminar_usuario).pack(side="left", padx=6)
-        ctk.CTkButton(btns_u, text="Refrescar", command=self.refrescar_usuarios).pack(side="right", padx=6)
+        #ctk.CTkButton(btns_u, text="Refrescar", command=self.refrescar_usuarios).pack(side="right", padx=6)
+        ctk.CTkButton(btns_u, image=refresh_img, text="", width=30, height=30,command=self.refrescar_usuarios).pack(side="right", padx=6)
 
         ctk.CTkLabel(izquierda, text="Sucursales", font=ctk.CTkFont(size=14, weight="bold")).pack(anchor="w", padx=6, pady=(12,2))
         # Ajuste: altura reducida para que los botones no se oculten
@@ -52,7 +54,8 @@ class AdminFrame(ctk.CTkFrame):
         ctk.CTkButton(btns_s, text="Agregar sucursal", command=self.agregar_sucursal).pack(side="left", padx=4)
         ctk.CTkButton(btns_s, text="Editar sucursal", command=self.editar_sucursal).pack(side="left", padx=4)
         ctk.CTkButton(btns_s, text="Eliminar sucursal", command=self.eliminar_sucursal).pack(side="left", padx=4)
-        ctk.CTkButton(btns_s, text="Refrescar", command=self.refrescar_sucursales).pack(side="right", padx=4)
+        #ctk.CTkButton(btns_s, text="Refrescar", command=self.refrescar_sucursales).pack(side="right", padx=4)
+        ctk.CTkButton(btns_s, image=refresh_img, text="", width=30, height=30,command=self.refrescar_sucursales).pack(side="right", padx=4)
 
         # Derecha: productos (separados por categoría)
         derecha = ctk.CTkFrame(cont)
@@ -65,7 +68,8 @@ class AdminFrame(ctk.CTkFrame):
         ctk.CTkButton(btns_p, text="Agregar producto", command=self.agregar_producto).pack(side="left", padx=6)
         ctk.CTkButton(btns_p, text="Editar stock", command=self.editar_stock).pack(side="left", padx=6)
         ctk.CTkButton(btns_p, text="Eliminar producto", command=self.eliminar_producto).pack(side="left", padx=6)
-        ctk.CTkButton(btns_p, text="Refrescar", command=self.refrescar_todo).pack(side="right", padx=6)
+        #ctk.CTkButton(btns_p, text="Refrescar", command=self.refrescar_todo).pack(side="right", padx=6)
+        ctk.CTkButton(btns_p, image=refresh_img, text="", width=30, height=30,command=self.refrescar_todo).pack(side="right", padx=6)
 
         self.refrescar_todo()
 
@@ -397,8 +401,8 @@ class AdminFrame(ctk.CTkFrame):
             precio = entry_precio.get()
             descripcion = text_desc.get("1.0", tk.END).strip()  
 
-            if not categoria or not precio or not nombre:
-                messagebox.showerror ("Error", "Categoria, precio y nombre son obligatorios")
+            if not categoria or not precio or not nombre or not descripcion:
+                messagebox.showerror ("Error", "Categoria, nombre, precio y descripcion son obligatorios")
                 return
             
             try:

@@ -29,5 +29,16 @@
       "total": 699.9,
       "fecha": "2025-11-07 21:47:49"
     }
+  ],
+  "misa": [
+    {
+      "categoria": "Celulares",
+      "producto": "Teléfono Modelo B",
+      "cantidad": 1,
+      "sucursal": "Sucursal Centro",
+      "metodo_pago": "efectivo",
+      "total": 699.9,
+      "fecha": "2025-11-11 01:38:15"
+    }
   ]
 }

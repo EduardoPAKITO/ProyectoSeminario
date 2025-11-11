@@ -96,10 +96,13 @@ class CarritoFrame(ctk.CTkFrame):
     def pedir_datos_tarjeta(self):
         top = ctk.CTkToplevel(self)
         top.title("Datos tarjeta")
-        top.geometry("420x320")
+        #top.geometry("420x320")
+        top.geometry("420x360+300+150")
+        top.resizable(False, False)
         top.transient(self.master)
         top.grab_set()
         top.focus_set()
+        top.lift()
 
         ctk.CTkLabel(top, text="Tipo de tarjeta:").place(x=20, y=20)
         tipo_var = ctk.StringVar(value="Visa")
@@ -109,7 +112,7 @@ class CarritoFrame(ctk.CTkFrame):
         entry_num = ctk.CTkEntry(top, width=260)
         entry_num.place(x=150, y=70)
 
-        ctk.CTkLabel(top, text="Nombre en la tarjeta:").place(x=20, y=110)
+        ctk.CTkLabel(top, text="Nombre de titular:").place(x=20, y=110)
         entry_nombre = ctk.CTkEntry(top, width=260)
         entry_nombre.place(x=150, y=110)
 
@@ -135,7 +138,8 @@ class CarritoFrame(ctk.CTkFrame):
             result.update({"numero": numero, "nombre": nombre, "vencimiento": venc, "cvv": cvv, "tipo": tipo})
             top.destroy()
 
-        ctk.CTkButton(top, text="Enviar", command=enviar).place(x=160, y=260, width=100)
+        #tk.Button(top, text="Enviar", command=enviar).place(x=160, y=270, width=10)       
+        tk.Button(top, text="Enviar", font="arial 12 bold", command=enviar, fg="white", bg="#2E8B64").place(x=160, y=270, width=100) 
 
         self.wait_window(top)
         return result if result else None

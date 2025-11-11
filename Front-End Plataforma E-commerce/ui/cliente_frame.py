@@ -20,6 +20,7 @@ class ClienteFrame(ctk.CTkFrame):
         self.productos_mostrados = []  # lista de tuples (categoria, nombre, datos)
         self.imagen_actual = None
         self.seleccion_actual = None
+        self.imagen_sin_foto = ctk.CTkImage(Image.open(os.path.join(CARPETA_IMAGENES, "sinfoto.jpg")), size=(250, 200)) 
         self._construir()
 
     def _construir(self):
@@ -58,8 +59,9 @@ class ClienteFrame(ctk.CTkFrame):
         self.lbl_descripcion.pack(anchor="w", pady=(2,4), padx=8)
 
         # label para imagen (se ajusta)
-        self.label_imagen = ctk.CTkLabel(derecho, text="(sin imagen)", width=300, height=200)
+        self.label_imagen = ctk.CTkLabel(derecho, text="", image=self.imagen_sin_foto, width=300, height=200)
         self.label_imagen.pack(pady=6)
+        self.label_imagen.image = self.imagen_sin_foto
 
         self.lbl_precio = ctk.CTkLabel(derecho, text="Precio: -")
         self.lbl_precio.pack(anchor="w", padx=8, pady=(6,0))
@@ -86,7 +88,7 @@ class ClienteFrame(ctk.CTkFrame):
         else:
             ctk.CTkLabel(derecho, text="Vista Administrador (no se permiten compras)").pack(pady=(8,4))
 
-        ctk.CTkButton(derecho, text="Limpiar", fg_color="gray70", hover_color="gray60", command=self.limpiar_detalle).pack()
+        ctk.CTkButton(derecho, text="Limpiar", command=self.limpiar_detalle).pack()
 
         # Inicializar mostrando todo
         self.mostrar_todo()
@@ -140,7 +142,13 @@ class ClienteFrame(ctk.CTkFrame):
             try:
                 pil_image = Image.open(imagen_path)
                 ctk_image_obj = CTkImage(light_image=pil_image, dark_image=pil_image, size=(150, 150))
-                img_label = ctk.CTkLabel(article_frame, image=ctk_image_obj, text="")
+                 #verificar si el stock total es 0
+                if stock == 0:
+                    img_label = ctk.CTkLabel(article_frame, image=ctk_image_obj, text="AGOTADO", text_color="red", font=ctk.CTkFont(size=32, weight="bold"))
+                    #self.label_imagen.configure(text="AGOTADO", text_color="red", font=ctk.CTkFont(size=32, weight="bold"))
+                else:
+                    img_label = ctk.CTkLabel(article_frame, image=ctk_image_obj, text="")
+                
                 img_label.pack(expand=True, fill="both", pady=(4, 2))
                 # click también sobre imagen
                 img_label.bind("<Button-1>", lambda e, t=producto_tuple: self.mostrar_detalle(*t))
@@ -167,6 +175,8 @@ class ClienteFrame(ctk.CTkFrame):
         self.lbl_precio.configure(text=f"Precio: ${producto.get('precio'):.2f}")
         # cargar sucursales
         sucursales = list(producto.get("stock_por_sucursal", {}).keys())
+        # calcular el stock total en todas las sucursales
+        stock_total = sum(producto.get("stock_por_sucursal", {}).values()) if sucursales else 0
         if sucursales:
             self.sucursal_menu.configure(values=sucursales)
             # establecer primer valor si no hay seleccionado
@@ -202,9 +212,19 @@ class ClienteFrame(ctk.CTkFrame):
                 self.label_imagen.configure(image=ctk_image_obj, text="")
                 self.label_imagen.image = ctk_image_obj
             except Exception:
-                self.label_imagen.configure(image=None, text="(imagen no cargada)")
+                self.label_imagen.configure(image=self.imagen_sin_foto, text="(imagen no cargada)")
+                self.label_imagen.image = self.imagen_sin_foto
         else:
-            self.label_imagen.configure(image=None, text="(sin imagen)")
+            self.label_imagen.configure(image=self.imagen_sin_foto, text="")
+            self.label_imagen.image = self.imagen_sin_foto
+
+        #verificar si el stock total es 0
+        """if stock_total == 0:
+            # mostrar el texto "AGOTADO" sobre la imagen por defecto
+            self.label_imagen.configure(text="AGOTADO", text_color="red", font=ctk.CTkFont(size=32, weight="bold"))
+        else:
+            # restaurar imagen y quitar texto si hay stock
+            self.label_imagen.configure(text="", text_color=None)"""
 
         # almacenar selección actual
         self.seleccion_actual = {"categoria": categoria, "nombre": nombre, "producto": producto}
@@ -229,6 +249,7 @@ class ClienteFrame(ctk.CTkFrame):
         self.lbl_descripcion.configure(text="Descripción: -")
         self.lbl_precio.configure(text="Precio: -")
         self.lbl_stock.configure(text="Stock en sucursal: -")
+        self.lbl_sucursal_info.configure(text="Dirección: -")
         try:
             self.sucursal_menu.configure(values=[])
             self.sucursal_menu.set("")
@@ -236,7 +257,11 @@ class ClienteFrame(ctk.CTkFrame):
             pass
         self.cantidad_entry.delete(0, "end")
         self.cantidad_entry.insert(0, "1")
-        self.label_imagen.configure(image=None, text="(sin imagen)")
+
+        # volver a la imagen por defecto
+        self.label_imagen.configure(image=self.imagen_sin_foto, text="")
+        self.label_imagen.image = self.imagen_sin_foto
+        
         self.productos_mostrados = []
         self.seleccion_actual = None
         # Volver a cargar la vista actual
