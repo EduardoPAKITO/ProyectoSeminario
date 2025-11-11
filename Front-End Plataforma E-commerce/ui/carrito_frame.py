@@ -36,7 +36,7 @@ class CarritoFrame(ctk.CTkFrame):
         self.lbl_info_pago.pack(side="left", padx=8)
 
         # Forma de pago
-        self.forma = ctk.StringVar(value="efectivo")
+        self.forma = ctk.StringVar(value="Efectivo")
         pay_fr = ctk.CTkFrame(bottom)
         pay_fr.pack(side="right")
         ctk.CTkLabel(pay_fr, text="Pago:").pack(side="left", padx=6)
