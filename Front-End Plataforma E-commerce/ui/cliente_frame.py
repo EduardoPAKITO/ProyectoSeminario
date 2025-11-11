@@ -195,6 +195,7 @@ class ClienteFrame(ctk.CTkFrame):
         # cargar imagen ajustable
         imagen_nombre = producto.get("imagen", "")
         ruta = os.path.join(CARPETA_IMAGENES, imagen_nombre) if imagen_nombre else None
+
         if ruta and os.path.exists(ruta):
             try:
                 pil_image = Image.open(ruta)
@@ -202,9 +203,9 @@ class ClienteFrame(ctk.CTkFrame):
                 self.label_imagen.configure(image=ctk_image_obj, text="")
                 self.label_imagen.image = ctk_image_obj
             except Exception:
-                self.label_imagen.configure(image=None, text="(imagen no cargada)")
+                self.label_imagen.configure(image=None, text="(Imágen no cargada)")
         else:
-            self.label_imagen.configure(image=None, text="(sin imagen)")
+            self.label_imagen.configure(image=None, text="(Sin Imágen)")
 
         # almacenar selección actual
         self.seleccion_actual = {"categoria": categoria, "nombre": nombre, "producto": producto}
@@ -237,7 +238,6 @@ class ClienteFrame(ctk.CTkFrame):
         self.cantidad_entry.delete(0, "end")
         self.cantidad_entry.insert(0, "1")
         self.label_imagen.configure(image=None, text="(Sin Imágen)")
-        self.label_imagen.image = None #Elimina referencia a la imagen anterior
         self.productos_mostrados = []
         self.seleccion_actual = None
         # Volver a cargar la vista actual
