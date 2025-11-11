@@ -236,7 +236,8 @@ class ClienteFrame(ctk.CTkFrame):
             pass
         self.cantidad_entry.delete(0, "end")
         self.cantidad_entry.insert(0, "1")
-        self.label_imagen.configure(image=None, text="(sin imagen)")
+        self.label_imagen.configure(image=None, text="(Sin Imágen)")
+        self.label_imagen.image = None #Elimina referencia a la imagen anterior
         self.productos_mostrados = []
         self.seleccion_actual = None
         # Volver a cargar la vista actual
