@@ -1,93 +1,324 @@
 {
   "Celulares": {
-    "Teléfono Modelo A": {
-      "id": "1879559c-9fcc-440d-bb28-e9a49781f512",
-      "precio": 699.9,
-      "imagen": "samsung a56.jpg",
-      "descripcion": "Celular Samsung A56 8GB RAM, 256 GB de almacenamiento interno",
+    "Xiaomi 15T Pro": {
+      "id": "1879559c-9fcc-440d-bb28-e9a49781f513",
+      "precio": 1278000,
+      "imagen": "xiaomi15TPro.jpg",
+      "descripcion": "Pantalla AMOLED de 6.83 pulgadas con tasa de refresco de 144Hz y está potenciado por un procesador Dimensity 9400+ con 12GB de RAM y hasta 1TB de almacenamiento no expandible.",
       "stock_por_sucursal": {
-        "Sucursal Centro": 3,
-        "Sucursal Norte": 1,
-        "Sucursal Sur": 0
+        "Sucursal Centro": 2,
+        "Sucursal Norte": 5,
+        "Sucursal Sur": 4
       }
     },
-    "Samsung S24 ": {
-      "id": "dd49b7a2-7045-4df0-8322-21b26a3c1d47",
-      "precio": 1000000.0,
-      "imagen": "default.jpg",
-      "descripcion": "Celular Samsung A56 8GB RAM, 256 GB de almacenamiento interno",
-      "stock_por_sucursal": {
-        "Sucursal Centro": 0,
-        "Sucursal Norte": 0,
-        "Sucursal Sur": 0
-      }
-    },
-    "Teléfono Modelo B": {
-      "id": "1879559c-9fcc-440d-bb28-e9a49781f512",
-      "precio": 699.9,
-      "imagen": "default.jpg",
-      "descripcion": "Celular Samsung A56 8GB RAM, 256 GB de almacenamiento interno",
-      "stock_por_sucursal": {
-        "Sucursal Centro": 0,
-        "Sucursal Norte": 1,
-        "Sucursal Sur": 0
-      }
-    },
-    "Teléfono Modelo C": {
-      "id": "1879559c-9fcc-440d-bb28-e9a49781f512",
-      "precio": 699.9,
-      "imagen": "default.jpg",
-      "descripcion": "Celular Samsung A56 8GB RAM, 256 GB de almacenamiento interno",
-      "stock_por_sucursal": {
-        "Sucursal Centro": 3,
-        "Sucursal Norte": 1,
-        "Sucursal Sur": 0
-      }
-    },
-    "Teléfono Modelo D": {
-      "id": "1879559c-9fcc-440d-bb28-e9a49781f512",
-      "precio": 699.9,
-      "imagen": "default.jpg",
-      "descripcion": "Celular Samsung A56 8GB RAM, 256 GB de almacenamiento interno",
-      "stock_por_sucursal": {
-        "Sucursal Centro": 3,
-        "Sucursal Norte": 1,
-        "Sucursal Sur": 0
-      }
-    },
-    "Samsuing A56": {
-      "id": "2ff5223a-868d-4c49-b7bc-1e89a4ce0960",
-      "precio": 500000.0,
-      "imagen": "Captura de pantalla 2025-09-12 220527.png",
-      "descripcion": "Celular Samsung A56 8GB RAM, 256 GB de almacenamiento interno",
+    "Xiaomi Poco F7 Ultra": {
+      "id": "1879559c-9fcc-440d-bb28-e9a49781f514",
+      "precio": 1316000,
+      "imagen": "PocoF7Ultra.jpg",
+      "descripcion": "Pantalla AMOLED de 120Hz de refresco y está potenciado por un procesador Snapdragon 8 Elite con hasta 16GB de RAM y 512GB de almacenamiento.",
       "stock_por_sucursal": {
         "Sucursal Centro": 1,
         "Sucursal Norte": 0,
+        "Sucursal Sur": 3
+      }
+    },
+    "Xiaomi Poco X7 Pro": {
+      "id": "1879559c-9fcc-440d-bb28-e9a49781f515",
+      "precio": 655000,
+      "imagen": "pocox7pro.jpg",
+      "descripcion": "Pantalla AMOLED de 6.67 pulgadas y 120Hz de refresco, y potenciado por un procesador Dimensity 8400 Ultra acompañado de hasta 12GB de RAM y 512GB de almacenamiento no expandible.",
+      "stock_por_sucursal": {
+        "Sucursal Centro": 4,
+        "Sucursal Norte": 2,
+        "Sucursal Sur": 5
+      }
+    },
+    "Xiaomi Redmi Note 14 Pro": {
+      "id": "1879559c-9fcc-440d-bb28-e9a49781f516",
+      "precio": 523000,
+      "imagen": "RedmiNote14Pro.jpg",
+      "descripcion": "Pantalla AMOLED de 6.67 pulgadas y 120Hz de refresco. Potenciado por un procesador Dimensity 7300 Ultra con hasta 12GB de RAM y 512GB de almacenamiento.",
+      "stock_por_sucursal": {
+        "Sucursal Centro": 3,
+        "Sucursal Norte": 1,
+        "Sucursal Sur": 0
+      }
+    },
+    "Xiaomi Redmi 15c": {
+      "id": "1879559c-9fcc-440d-bb28-e9a49781f517",
+      "precio": 287000,
+      "imagen": "redmi15c.jpg",
+      "descripcion": "Modelo de entrada 4G de Xiaomi con 256GB de almacenamiento y total de 8GB + 8GB RAM virtual, ideal para uso cotidiano.",
+      "stock_por_sucursal": {
+        "Sucursal Centro": 5,
+        "Sucursal Norte": 4,
+        "Sucursal Sur": 2
+      }
+    },
+    "Samsung Galaxy S24 Ultra": {
+      "id": "1879559c-9fcc-440d-bb28-e9a49781f518",
+      "precio": 1703000,
+      "imagen": "s24ultra.jpg",
+      "descripcion": "Pantalla AMOLED de 6.8 pulgadas a resolución QHD+, procesador Snapdragon 8 Gen 3, acompañado de 12GB de RAM con hasta 1TB de almacenamiento.",
+      "stock_por_sucursal": {
+        "Sucursal Centro": 0,
+        "Sucursal Norte": 3,
+        "Sucursal Sur": 1
+      }
+    },
+    "Samsung Galaxy A26": {
+      "id": "1879559c-9fcc-440d-bb28-e9a49781f519",
+      "precio": 438000,
+      "imagen": "sA26.jpg",
+      "descripcion": "Pantalla AMOLED de 6.7 pulgadas con tasa de refresco de 120Hz y potenciado por un procesador Exynos 1380, con hasta 8GB de RAM y 256GB de almacenamiento.",
+      "stock_por_sucursal": {
+        "Sucursal Centro": 4,
+        "Sucursal Norte": 0,
+        "Sucursal Sur": 2
+      }
+    },
+    "Samsung Galaxy A17": {
+      "id": "1879559c-9fcc-440d-bb28-e9a49781f520",
+      "precio": 410000,
+      "imagen": "A17.png",
+      "descripcion": "Pantalla AMOLED de 6.7 pulgadas con refresco de 90Hz y está potenciado por un procesador Helio G99 con hasta 8GB de RAM y 256GB de almacenamiento.",
+      "stock_por_sucursal": {
+        "Sucursal Centro": 2,
+        "Sucursal Norte": 5,
+        "Sucursal Sur": 3
+      }
+    },
+    "Samsung Galaxy A16": {
+      "id": "1879559c-9fcc-440d-bb28-e9a49781f521",
+      "precio": 278000,
+      "imagen": "A16.jpg",
+      "descripcion": "Pantalla de 6,7 Super AMOLED, cámara principal de 50MP, batería de 5.000mAh, buen acompañante para tareas básicas.",
+      "stock_por_sucursal": {
+        "Sucursal Centro": 1,
+        "Sucursal Norte": 2,
+        "Sucursal Sur": 4
+      }
+    },
+    "Samsung Galaxy A06": {
+      "id": "1879559c-9fcc-440d-bb28-e9a49781f522",
+      "precio": 250000,
+      "imagen": "A06.png",
+      "descripcion": "Procesador MediaTek Dimensity 6300 para conectividad 5G, con hasta 6GB de RAM y 128GB de almacenamienton, pantalla HD+ de 6.7 pulgadas con refresco de 90Hz.",
+      "stock_por_sucursal": {
+        "Sucursal Centro": 0,
+        "Sucursal Norte": 3,
+        "Sucursal Sur": 5
+      }
+    },
+    "Moto Edge 50 Ultra": {
+      "id": "1879559c-9fcc-440d-bb28-e9a49781f523",
+      "precio": 1467000,
+      "imagen": "edge50.jpg",
+      "descripcion": "Alta gama de Motorola con pantalla pOLED de 6,7 144Hz, Snapdragon 8s Gen 3, cámaras triples hasta 64MP telefoto y carga rápida 125W.",
+      "stock_por_sucursal": {
+        "Sucursal Centro": 5,
+        "Sucursal Norte": 1,
+        "Sucursal Sur": 2
+      }
+    },
+    "Moto Edge 60": {
+      "id": "1879559c-9fcc-440d-bb28-e9a49781f524",
+      "precio": 538000,
+      "imagen": "edge60.jpg",
+      "descripcion": "Pantalla de 6.7, memoria interna de 256 GB y 12 GB de RA, desbloqueo seguro y rápido, cuenta con 5G",
+      "stock_por_sucursal": {
+        "Sucursal Centro": 3,
+        "Sucursal Norte": 2,
+        "Sucursal Sur": 1
+      }
+    },
+    "Moto G85": {
+      "id": "1879559c-9fcc-440d-bb28-e9a49781f525",
+      "precio": 467000,
+      "imagen": "default.jpg",
+      "descripcion": "Pantalla pOLED de 6.67 pulgadas con tasa de refresco de 120Hz y está potenciado por un procesador Snapdragon 6s Gen 3 acompañado de hasta 12GB de RAM y 256GB de almacenamiento. ",
+      "stock_por_sucursal": {
+        "Sucursal Centro": 4,
+        "Sucursal Norte": 4,
+        "Sucursal Sur": 0
+      }
+    },
+    "Moto E20": {
+      "id": "1879559c-9fcc-440d-bb28-e9a49781f512",
+      "precio": 699.9,
+      "imagen": "default.jpg",
+      "descripcion": "Android 11 Go Edition con una pantalla de 6.5 pulgadas a resolución HD+. Por dentro Moto E20 encontramos un procesador Unisoc T606 con 2GB de RAM y 32GB de almacenamiento",
+      "stock_por_sucursal": {
+        "Sucursal Centro": 3,
+        "Sucursal Norte": 1,
         "Sucursal Sur": 0
       }
     }
   },
   "Accesorios": {
-    "Funda Protectora": {
+    "PS5 con lectora": {
       "id": "f1cf0d70-7a45-42e9-bcfa-2d742293a836",
-      "precio": 19.9,
-      "imagen": "default2.png",
-      "descripcion": "Celular Samsung A56 8GB RAM, 256 GB de almacenamiento interno",
+      "precio": 1120000,
+      "imagen": "ps5.jpg",
+      "descripcion": "Alto rendimiento con gráficos 4K y un potente procesador de 8 núcleos que asegura juegos fluidos. Su control DualSense ofrece una experiencia inmersiva, cuenta con 1 TB de almacenamiento y bajo consumo energético",
       "stock_por_sucursal": {
         "Sucursal Centro": 3,
+        "Sucursal Norte": 1,
+        "Sucursal Sur": 4
+      }
+    },
+    "Joystick PS5": {
+      "id": "f1cf0d70-7a45-42e9-bcfa-2d742293a837",
+      "precio": 160000,
+      "imagen": "mando.jpg",
+      "descripcion": "Control inalámbrico DualSense para PS5, con hápticos, gatillos adaptativos y micrófono integrado.",
+      "stock_por_sucursal": {
+        "Sucursal Centro": 2,
+        "Sucursal Norte": 0,
+        "Sucursal Sur": 5
+      }
+    },
+    "Tab Samsung S9": {
+      "id": "f1cf0d70-7a45-42e9-bcfa-2d742293a838",
+      "precio": 1090000,
+      "imagen": "tabs9.jpg",
+      "descripcion": "Tablet de Samsung modelo S9 con 256 GB de almacenamiento y 12 GB de RAM, ideal para productividad y multimedia.",
+      "stock_por_sucursal": {
+        "Sucursal Centro": 4,
+        "Sucursal Norte": 5,
+        "Sucursal Sur": 1
+      }
+    },
+    "Xiaomi Poco Pad": {
+      "id": "f1cf0d70-7a45-42e9-bcfa-2d742293a839",
+      "precio": 561000,
+      "imagen": "pocopad.jpg",
+      "descripcion": "Tablet de Xiaomi (Poco Pad) con 256 GB de almacenamiento y 8 GB de RAM, buena opción de gama media.",
+      "stock_por_sucursal": {
+        "Sucursal Centro": 1,
+        "Sucursal Norte": 3,
+        "Sucursal Sur": 2
+      }
+    },
+    "Xiaomi Pad 7": {
+      "id": "f1cf0d70-7a45-42e9-bcfa-2d742293a840",
+      "precio": 693000,
+      "imagen": "pad7.jpg",
+      "descripcion": "Tablet Xiaomi Pad 7 con 256 GB de almacenamiento y 8 GB de RAM, pantalla amplia para entretenimiento y estudio.",
+      "stock_por_sucursal": {
+        "Sucursal Centro": 0,
+        "Sucursal Norte": 2,
+        "Sucursal Sur": 5
+      }
+    },
+    "JBL Flip 7": {
+      "id": "f1cf0d70-7a45-42e9-bcfa-2d742293a841",
+      "precio": 227000,
+      "imagen": "jblflip7.jpg",
+      "descripcion": "Parlante portátil con potencia 25W, resistencia al agua/polvo, ideal para exteriores.",
+      "stock_por_sucursal": {
+        "Sucursal Centro": 3,
+        "Sucursal Norte": 4,
+        "Sucursal Sur": 0
+      }
+    },
+    "JBL Clip 5": {
+      "id": "f1cf0d70-7a45-42e9-bcfa-2d742293a842",
+      "precio": 115000,
+      "imagen": "clip5.jpg",
+      "descripcion": "Parlante portátil tipo clip de JBL, compacto para exteriores o actividades en movimiento.",
+      "stock_por_sucursal": {
+        "Sucursal Centro": 5,
+        "Sucursal Norte": 2,
+        "Sucursal Sur": 1
+      }
+    },
+    "Sound Outdoor": {
+      "id": "f1cf0d70-7a45-42e9-bcfa-2d742293a843",
+      "precio": 105000,
+      "imagen": "xiaomisound.png",
+      "descripcion": "Parlante portátil de Xiaomi con 30W de potencia, buen acompañante para uso diario o exterior.",
+      "stock_por_sucursal": {
+        "Sucursal Centro": 4,
+        "Sucursal Norte": 1,
+        "Sucursal Sur": 4
+      }
+    },
+    "Redmi Buds 6": {
+      "id": "f1cf0d70-7a45-42e9-bcfa-2d742293a844",
+      "precio": 85000,
+      "imagen": "buds6.jpg",
+      "descripcion": "Auriculares inalámbricos con doble driver, cancelación activa de ruido hasta 49 dB, Bluetooth 5.4.",
+      "stock_por_sucursal": {
+        "Sucursal Centro": 0,
+        "Sucursal Norte": 3,
+        "Sucursal Sur": 2
+      }
+    },
+    "Redmi Buds 6 Play": {
+      "id": "f1cf0d70-7a45-42e9-bcfa-2d742293a845",
+      "precio": 40000,
+      "imagen": "buds6play.jpg",
+      "descripcion": "Versión más económica de los Redmi Buds 6 de Xiaomi, ideal para uso cotidiano.",
+      "stock_por_sucursal": {
+        "Sucursal Centro": 2,
+        "Sucursal Norte": 4,
+        "Sucursal Sur": 0
+      }
+    },
+    "Redmi Watch 5 Active": {
+      "id": "f1cf0d70-7a45-42e9-bcfa-2d742293a846",
+      "precio": 85000,
+      "imagen": "watch5.jpg",
+      "descripcion": "Reloj inteligente de Xiaomi modelo Redmi Watch 5 Active con soporte para llamadas y funciones de salud/smartwatch.",
+      "stock_por_sucursal": {
+        "Sucursal Centro": 1,
+        "Sucursal Norte": 5,
+        "Sucursal Sur": 3
+      }
+    },
+    "Mi Band 9": {
+      "id": "f1cf0d70-7a45-42e9-bcfa-2d742293a847",
+      "precio": 80000,
+      "imagen": "miband9.png",
+      "descripcion": "Pulsera inteligente Xiaomi Mi Band 9, seguimiento de actividad, salud, notificaciones y pantalla táctil.",
+      "stock_por_sucursal": {
+        "Sucursal Centro": 4,
+        "Sucursal Norte": 0,
+        "Sucursal Sur": 2
+      }
+    },
+    "Cargador Samsung USB C": {
+      "id": "f1cf0d70-7a45-42e9-bcfa-2d742293a848",
+      "precio": 28000,
+      "imagen": "cargadorS.jpg",
+      "descripcion": "Cargador de pared de Samsung USB-C 25 W con soporte para carga rápida, compacto y práctico.",
+      "stock_por_sucursal": {
+        "Sucursal Centro": 5,
         "Sucursal Norte": 1,
         "Sucursal Sur": 0
       }
     },
-    "Cargador Rápido 30W": {
-      "id": "e874ccc8-9647-4121-a3c7-3cad45f28d55",
-      "precio": 29.5,
+    "Convertidor Xiaomi TVBox": {
+      "id": "f1cf0d70-7a45-42e9-bcfa-2d742293a849",
+      "precio": 125000,
       "imagen": "default2.png",
-      "descripcion": "Celular Samsung A56 8GB RAM, 256 GB de almacenamiento interno",
+      "descripcion": "Dispositivo de streaming de Xiaomi TV Box S 3ª generación, convierte tu tele a smart con Android y apps.",
+      "stock_por_sucursal": {
+        "Sucursal Centro": 2,
+        "Sucursal Norte": 3,
+        "Sucursal Sur": 1
+      }
+    },
+    "Proyector Ultra HD": {
+      "id": "f1cf0d70-7a45-42e9-bcfa-2d742293a850",
+      "precio": 145000,
+      "imagen": "default2.png",
+      "descripcion": "Proyector de vídeo Ultra HD con sistema Android incorporado, ideal para cine en casa o presentaciones.",
       "stock_por_sucursal": {
         "Sucursal Centro": 3,
-        "Sucursal Norte": 1,
-        "Sucursal Sur": 0
+        "Sucursal Norte": 4,
+        "Sucursal Sur": 2
       }
     }
   }
