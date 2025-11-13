@@ -124,7 +124,7 @@ class ClienteFrame(ctk.CTkFrame):
             imagen_nombre = prod.get("imagen", "")
             ruta_imagen = os.path.join(CARPETA_IMAGENES, imagen_nombre) if imagen_nombre else None
             self.mostrar_articulo(i, nombre, prod.get("precio", 0), ruta_imagen, stock_total, (cat, nombre, prod))
-
+ 
     def mostrar_articulo(self, indice, articulo, precio, imagen_path, stock, producto_tuple):
         # Frame individual para cada producto
         article_frame = ctk.CTkFrame(self.scroll_frame, fg_color="white", corner_radius=8)
