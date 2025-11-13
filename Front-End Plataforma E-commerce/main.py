@@ -61,7 +61,7 @@ class App(ctk.CTk):
         self.tabview = ctk.CTkTabview(self.contenedor_principal)
         self.tabview.pack(fill="both", expand=True)
         # Siempre: Catálogo; si cliente: Carrito y Mi Perfil; si admin: Administracion
-        self.tabview.add("Catálogo y Compra")
+        self.tabview.add("Catálogo")
         if rol != "admin":
             self.tabview.add("Carrito")
             self.tabview.add("Mi Perfil")
@@ -71,9 +71,9 @@ class App(ctk.CTk):
         # Instanciar frames dentro de pestañas
         # pasar callback para agregar al carrito a ClienteFrame
         if rol == "admin":
-            self.frame_cliente = ClienteFrame(self.tabview.tab("Catálogo y Compra"), self.get_usuario_actual, add_to_cart_callback=None, role="admin")
+            self.frame_cliente = ClienteFrame(self.tabview.tab("Catálogo"), self.get_usuario_actual, add_to_cart_callback=None, role="admin")
         else:
-            self.frame_cliente = ClienteFrame(self.tabview.tab("Catálogo y Compra"), self.get_usuario_actual, add_to_cart_callback=self.agregar_al_carrito, role="cliente")
+            self.frame_cliente = ClienteFrame(self.tabview.tab("Catálogo"), self.get_usuario_actual, add_to_cart_callback=self.agregar_al_carrito, role="cliente")
         self.frame_cliente.pack(fill="both", expand=True)
 
         if rol != "admin":
@@ -115,6 +115,8 @@ class App(ctk.CTk):
             self.frame_carrito.pack_forget()
             self.frame_carrito.destroy()
             self.frame_carrito = None
+        
+        self.vaciar_carrito()
 
         # reset sesión
         self.usuario_actual = None
