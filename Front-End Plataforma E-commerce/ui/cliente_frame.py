@@ -205,6 +205,7 @@ class ClienteFrame(ctk.CTkFrame):
         # cargar imagen ajustable
         imagen_nombre = producto.get("imagen", "")
         ruta = os.path.join(CARPETA_IMAGENES, imagen_nombre) if imagen_nombre else None
+
         if ruta and os.path.exists(ruta):
             try:
                 pil_image = Image.open(ruta)
@@ -253,9 +254,9 @@ class ClienteFrame(ctk.CTkFrame):
         # volver a la imagen por defecto
         self.label_imagen.configure(image=self.imagen_sin_foto, text="")
         self.label_imagen.image = self.imagen_sin_foto
-        
         self.productos_mostrados = []
         self.seleccion_actual = None
+        
         # Volver a cargar la vista actual
         self.mostrar_todo()
 

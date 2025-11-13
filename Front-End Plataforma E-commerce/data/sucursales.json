@@ -1,14 +1,14 @@
 {
   "Sucursal Centro": {
-    "direccion": "Av. Principal 123",
-    "telefono": "388-123-241"
+    "direccion": "Gral. Balcarce 367, SS. de Jujuy",
+    "telefono": "388-1234567"
   },
   "Sucursal Norte": {
-    "direccion": "Ruta 9 km 10",
-    "telefono": "111-111"
+    "direccion": "Gral. Belgrano 400, SS. de Jujuy",
+    "telefono": "388-7654321"
   },
   "Sucursal Sur": {
-    "direccion": "Ítalo Palanca 456",
-    "telefono": "222-222"
+    "direccion": "San Martín esq. Moreno, Perico",
+    "telefono": "388-1357246"
   }
 }
