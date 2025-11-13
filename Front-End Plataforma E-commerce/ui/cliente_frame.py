@@ -218,14 +218,6 @@ class ClienteFrame(ctk.CTkFrame):
             self.label_imagen.configure(image=self.imagen_sin_foto, text="")
             self.label_imagen.image = self.imagen_sin_foto
 
-        #verificar si el stock total es 0
-        """if stock_total == 0:
-            # mostrar el texto "AGOTADO" sobre la imagen por defecto
-            self.label_imagen.configure(text="AGOTADO", text_color="red", font=ctk.CTkFont(size=32, weight="bold"))
-        else:
-            # restaurar imagen y quitar texto si hay stock
-            self.label_imagen.configure(text="", text_color=None)"""
-
         # almacenar selección actual
         self.seleccion_actual = {"categoria": categoria, "nombre": nombre, "producto": producto}
 
