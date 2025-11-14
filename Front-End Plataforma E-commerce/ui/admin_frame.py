@@ -230,7 +230,7 @@ class AdminFrame(ctk.CTkFrame):
 
         nombre_var = ctk.StringVar(value=nombres[0])
 
-        ctk.CTkLabel(top, text="Sucursal:", width=100, height=25).place(x=40, y=30)
+        tk.Label(top, text="Sucursal:", font="arial 12 bold", fg="white", bg=top["bg"]).place(x=40, y=30, width=120, height=25)
         ctk.CTkOptionMenu(top, values=nombres, variable=nombre_var, width=400).place(x=150, y=30)
 
         tk.Label(top, text="Dirección:", font="arial 12 bold", fg="white", bg=top["bg"]).place(x=40, y=80, width=120, height=25)
@@ -535,5 +535,5 @@ class AdminFrame(ctk.CTkFrame):
                 self.refrescar_sucursales()
             else:
                 messagebox.showerror("Error", "No se encontró el producto.")
-        tk.Button(top, text="Eliminar producto", font="arial 12 bold", command=eliminar, fg="white", bg="#2E8B64").place(x=150, y=180, width=150, height=40)
+        tk.Button(top, text="Eliminar", font="arial 12 bold", command=eliminar, fg="white", bg="#2E8B64").place(x=150, y=180, width=150, height=40)
         tk.Button(top, text="Cancelar", font="arial 12 bold", command=top.destroy, fg="white", bg="#2E8B64").place(x=350, y=180, width=150, height=40)

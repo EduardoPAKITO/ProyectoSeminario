@@ -2,4 +2,3 @@ usuario,clave,rol,email,nombre
 admin,admin,admin,,
 eduardo,1234,cliente,edu@gmail.com,eduardo mamani
 rolon,1234,cliente,rolo@gmail.com,rolando arrueta
-misa,1234,cliente,"misaelmax08@gmail,com",Misael Vidaurre
