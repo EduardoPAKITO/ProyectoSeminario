@@ -8,6 +8,15 @@
       "metodo_pago": "Efectivo",
       "total": 1184400.0,
       "fecha": "2025-11-14 18:22:11"
+    },
+    {
+      "categoria": "Celulares",
+      "producto": "Xiaomi Poco X7 Pro",
+      "cantidad": 1,
+      "sucursal": "Sucursal Centro",
+      "metodo_pago": "Efectivo",
+      "total": 589500.0,
+      "fecha": "2025-11-14 19:00:58"
     }
   ],
   "cliente": [
