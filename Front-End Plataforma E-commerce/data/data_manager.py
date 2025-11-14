@@ -5,23 +5,14 @@ import uuid
 from datetime import datetime
 
 class DataManager:
-    """""
-    Atributos de Clase:
-        BASE_DIR (str): Directorio raíz del proyecto
-        DATA_DIR (str): Directorio de archivos de datos
-        RUTA_USUARIOS (str): Ruta al archivo CSV de usuarios
-        RUTA_PRODUCTOS (str): Ruta al archivo JSON de productos
-        RUTA_VENTAS (str): Ruta al archivo JSON de ventas
-        CARPETA_IMAGENES (str): Ruta a la carpeta de imágenes
-    """""
-    # Rutas CORREGIDAS - relativas al directorio del proyecto
+    # Rutas relativas al directorio del proyecto
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # Directorio raíz del proyecto
-    DATA_DIR = os.path.join(BASE_DIR, "data")
-    RUTA_USUARIOS = os.path.join(DATA_DIR, "usuarios.csv")
-    RUTA_PRODUCTOS = os.path.join(DATA_DIR, "productos.json")
-    RUTA_VENTAS = os.path.join(DATA_DIR, "ventas.json")
-    RUTA_SUCURSALES = os.path.join(DATA_DIR, "sucursales.json")
-    CARPETA_IMAGENES = os.path.join(BASE_DIR, "images")
+    DATA_DIR = os.path.join(BASE_DIR, "data") #Directorio de archivos de datos
+    RUTA_USUARIOS = os.path.join(DATA_DIR, "usuarios.csv") #Ruta al archivo CSV de usuarios
+    RUTA_PRODUCTOS = os.path.join(DATA_DIR, "productos.json") #Ruta al archivo JSON de productos
+    RUTA_VENTAS = os.path.join(DATA_DIR, "ventas.json") #Ruta al archivo JSON de ventas
+    RUTA_SUCURSALES = os.path.join(DATA_DIR, "sucursales.json") #Ruta al archivo JSON de sucursales
+    CARPETA_IMAGENES = os.path.join(BASE_DIR, "images") #Ruta a la carpeta de imágenes
 
     @staticmethod
     def asegurar_archivos():

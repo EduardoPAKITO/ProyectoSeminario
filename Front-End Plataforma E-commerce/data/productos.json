@@ -62,8 +62,8 @@
       "descripcion": "Pantalla AMOLED de 6.8 pulgadas a resolución QHD+, procesador Snapdragon 8 Gen 3, acompañado de 12GB de RAM con hasta 1TB de almacenamiento.",
       "stock_por_sucursal": {
         "Sucursal Centro": 0,
-        "Sucursal Norte": 3,
-        "Sucursal Sur": 1
+        "Sucursal Norte": 0,
+        "Sucursal Sur": 0
       }
     },
     "Samsung Galaxy A26": {
@@ -283,7 +283,7 @@
       "imagen": "miband9.png",
       "descripcion": "Pulsera inteligente Xiaomi Mi Band 9, seguimiento de actividad, salud, notificaciones y pantalla táctil.",
       "stock_por_sucursal": {
-        "Sucursal Centro": 4,
+        "Sucursal Centro": 3,
         "Sucursal Norte": 0,
         "Sucursal Sur": 2
       }

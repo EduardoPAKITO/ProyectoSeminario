@@ -19,12 +19,12 @@ class AdminFrame(ctk.CTkFrame):
 
     def _construir(self):
         refresh_img = ctk.CTkImage(Image.open(os.path.join(CARPETA_IMAGENES, "icono.png")), size=(20, 20))
-        # panel superior con botones
+        # Panel superior con botones
         top = ctk.CTkFrame(self)
         top.pack(fill="x", padx=8, pady=8)
         ctk.CTkLabel(top, text="Panel de Administración", font=ctk.CTkFont(size=18, weight="bold")).pack(side="left", padx=6)
 
-        # contenedor principal
+        # Contenedor principal
         cont = ctk.CTkFrame(self)
         cont.pack(fill="both", expand=True, padx=8, pady=8)
 
@@ -37,9 +37,8 @@ class AdminFrame(ctk.CTkFrame):
         self.usuarios_box.pack(fill="both", expand=False, padx=6, pady=6)
         btns_u = ctk.CTkFrame(izquierda)
         btns_u.pack(fill="x", padx=6, pady=6)
-        # SE QUITA boton Agregar cliente 
+        
         ctk.CTkButton(btns_u, text="Eliminar usuario", command=self.eliminar_usuario).pack(side="left", padx=6)
-        #ctk.CTkButton(btns_u, text="Refrescar", command=self.refrescar_usuarios).pack(side="right", padx=6)
         ctk.CTkButton(btns_u, image=refresh_img, text="", width=30, height=30,command=self.refrescar_usuarios).pack(side="right", padx=6)
 
         ctk.CTkLabel(izquierda, text="Sucursales", font=ctk.CTkFont(size=14, weight="bold")).pack(anchor="w", padx=6, pady=(12,2))
@@ -54,7 +53,6 @@ class AdminFrame(ctk.CTkFrame):
         ctk.CTkButton(btns_s, text="Agregar sucursal", command=self.agregar_sucursal).pack(side="left", padx=4)
         ctk.CTkButton(btns_s, text="Editar sucursal", command=self.editar_sucursal).pack(side="left", padx=4)
         ctk.CTkButton(btns_s, text="Eliminar sucursal", command=self.eliminar_sucursal).pack(side="left", padx=4)
-        #ctk.CTkButton(btns_s, text="Refrescar", command=self.refrescar_sucursales).pack(side="right", padx=4)
         ctk.CTkButton(btns_s, image=refresh_img, text="", width=30, height=30,command=self.refrescar_sucursales).pack(side="right", padx=4)
 
         # Derecha: productos (separados por categoría)
@@ -68,7 +66,6 @@ class AdminFrame(ctk.CTkFrame):
         ctk.CTkButton(btns_p, text="Agregar producto", command=self.agregar_producto).pack(side="left", padx=6)
         ctk.CTkButton(btns_p, text="Editar stock", command=self.editar_stock).pack(side="left", padx=6)
         ctk.CTkButton(btns_p, text="Eliminar producto", command=self.eliminar_producto).pack(side="left", padx=6)
-        #ctk.CTkButton(btns_p, text="Refrescar", command=self.refrescar_todo).pack(side="right", padx=6)
         ctk.CTkButton(btns_p, image=refresh_img, text="", width=30, height=30,command=self.refrescar_todo).pack(side="right", padx=6)
 
         self.refrescar_todo()
@@ -195,8 +192,8 @@ class AdminFrame(ctk.CTkFrame):
             nombre = entry_nombre.get().strip()
             direccion = entry_direccion.get().strip()
             telefono = entry_telefono.get().strip()
-            if not nombre:
-                messagebox.showerror ("Error", "Debe completar el campo nombre")
+            if not nombre or not direccion or not telefono:
+                messagebox.showerror ("Error", "Debe completar todos los campos")
                 return
             ok, msg = DataManager.agregar_sucursal(nombre, direccion=direccion, telefono=telefono)
             if ok:
@@ -288,6 +285,10 @@ class AdminFrame(ctk.CTkFrame):
                 messagebox.showerror ("Error", "Debe completar el campo")
                 return
             
+            confirm = messagebox.askyesno("Confirmar", f"¿Eliminar sucursal ({nombre})?")
+            if not confirm:
+                return
+
             ok = DataManager.eliminar_sucursal(nombre)
             if ok:
                 messagebox.showinfo("OK", "Sucursal eliminada de todos los productos.")
@@ -462,10 +463,10 @@ class AdminFrame(ctk.CTkFrame):
         sucursal_var = ctk.StringVar(value=sucursales[0] if sucursales else "")
         stock_var = tk.StringVar()
 
-        tk.Label(top, text="Sucursal:", font="arial 12 bold", fg="white", bg=top["bg"]).place(x=150, y=140, width=100, height=25)
+        tk.Label(top, text="Sucursal:", font="arial 12 bold", fg="white", bg=top["bg"]).place(x=150, y=140, width=80, height=25)
         ctk.CTkOptionMenu(top, values=sucursales, variable=sucursal_var, width=180).place(x=260, y=140)
 
-        tk.Label(top, text="Stock:", font="arial 12 bold", fg="white", bg=top["bg"]).place(x=150, y=180, width=100, height=25)
+        tk.Label(top, text="Stock:", font="arial 12 bold", fg="white", bg=top["bg"]).place(x=150, y=180, width=80, height=25)
         ttk.Entry(top, textvariable=stock_var, font="arial 12 bold").place(x=260, y=180, width=180, height=30)
         
         def actualizar():
@@ -525,6 +526,10 @@ class AdminFrame(ctk.CTkFrame):
 
             if not nombre:
                 messagebox.showerror ("Error", "Debe completar el campo")
+                return
+            
+            confirm = messagebox.askyesno("Confirmar", f"¿Eliminar producto ({nombre})?")
+            if not confirm:
                 return
             
             ok = DataManager.eliminar_producto(categoria, nombre)

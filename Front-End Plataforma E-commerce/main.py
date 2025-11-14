@@ -2,7 +2,6 @@
 import customtkinter as ctk
 from ui import LoginFrame, ClienteFrame, AdminFrame, PerfilFrame, CarritoFrame
 from data.data_manager import DataManager
-import os
 
 # Inicializar archivos si faltan
 DataManager.asegurar_archivos()

@@ -1,7 +1,7 @@
 # login_frame.py
 import customtkinter as ctk
 from data.data_manager import DataManager
-from tkinter import messagebox, simpledialog
+from tkinter import messagebox
 
 class LoginFrame(ctk.CTkFrame):
     def __init__(self, master, funcion_on_login, *args, **kwargs):

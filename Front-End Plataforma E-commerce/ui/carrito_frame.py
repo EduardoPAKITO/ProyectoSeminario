@@ -1,9 +1,7 @@
 # carrito_frame.py
 import customtkinter as ctk
 from tkinter import messagebox
-from data.data_manager import DataManager
 import tkinter as tk
-import tkinter.font as tkfont
 
 class CarritoFrame(ctk.CTkFrame):
     def __init__(self, master, funcion_get_usuario, obtener_carrito_callback, vaciar_carrito_callback, procesar_compra_callback, *args, **kwargs):

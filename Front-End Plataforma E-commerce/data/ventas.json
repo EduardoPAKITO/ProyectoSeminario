@@ -2,43 +2,41 @@
   "eduardo": [
     {
       "categoria": "Celulares",
-      "producto": "Teléfono Modelo A",
+      "producto": "Samsung Galaxy S24 Ultra",
       "cantidad": 1,
-      "sucursal": "Sucursal Centro",
-      "metodo_pago": "contado",
-      "total": 699.9,
-      "fecha": "2025-11-06 21:00:59"
+      "sucursal": "Sucursal Sur",
+      "metodo_pago": "Débito",
+      "total": 1703000.0,
+      "fecha": "2025-11-14 01:44:13"
     },
     {
       "categoria": "Celulares",
-      "producto": "Teléfono Modelo A",
-      "cantidad": 1,
-      "sucursal": "Sucursal Centro",
-      "metodo_pago": "contado",
-      "total": 699.9,
-      "fecha": "2025-11-06 21:09:46"
-    }
-  ],
-  "cliente": [
-    {
-      "categoria": "Celulares",
-      "producto": "Teléfono Modelo A",
+      "producto": "Samsung Galaxy S24 Ultra",
       "cantidad": 1,
       "sucursal": "Sucursal Norte",
-      "metodo_pago": "credito",
-      "total": 699.9,
-      "fecha": "2025-11-07 21:47:49"
+      "metodo_pago": "Crédito",
+      "total": 1788150.0,
+      "fecha": "2025-11-14 01:45:01"
     }
   ],
   "misa": [
     {
       "categoria": "Celulares",
-      "producto": "Teléfono Modelo B",
+      "producto": "Samsung Galaxy S24 Ultra",
+      "cantidad": 2,
+      "sucursal": "Sucursal Norte",
+      "metodo_pago": "Efectivo",
+      "total": 3065400.0,
+      "fecha": "2025-11-14 01:41:30"
+    },
+    {
+      "categoria": "Accesorios",
+      "producto": "Mi Band 9",
       "cantidad": 1,
       "sucursal": "Sucursal Centro",
-      "metodo_pago": "efectivo",
-      "total": 699.9,
-      "fecha": "2025-11-11 01:38:15"
+      "metodo_pago": "Efectivo",
+      "total": 72000.0,
+      "fecha": "2025-11-14 01:41:30"
     }
   ]
 }

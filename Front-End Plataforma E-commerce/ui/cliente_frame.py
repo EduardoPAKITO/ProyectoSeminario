@@ -1,5 +1,4 @@
 # cliente_frame.py
-import tkinter as tk
 import customtkinter as ctk
 from data.data_manager import DataManager
 from tkinter import messagebox
