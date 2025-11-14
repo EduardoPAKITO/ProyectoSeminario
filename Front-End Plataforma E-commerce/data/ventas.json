@@ -17,6 +17,15 @@
       "metodo_pago": "contado",
       "total": 699.9,
       "fecha": "2025-11-06 21:09:46"
+    },
+    {
+      "categoria": "Celulares",
+      "producto": "Xiaomi Poco F7 Ultra",
+      "cantidad": 1,
+      "sucursal": "Sucursal Centro",
+      "metodo_pago": "Efectivo",
+      "total": 1184400.0,
+      "fecha": "2025-11-14 18:22:11"
     }
   ],
   "cliente": [
