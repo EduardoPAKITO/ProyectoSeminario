@@ -110,8 +110,7 @@ class DataManager:
             writer = csv.writer(f)
             writer.writerow(["usuario", "clave", "rol", "email", "nombre"])
             for usuario, info in dic_usuarios.items():
-                writer.writerow([usuario, info.get("clave",""), info.get("rol","cliente"),
-                                 info.get("email",""), info.get("nombre","")])
+                writer.writerow([usuario, info.get("clave",""), info.get("rol","cliente"), info.get("email",""), info.get("nombre","")])
 
     @staticmethod
     def crear_usuario_cliente(usuario, clave, email="", nombre=""):

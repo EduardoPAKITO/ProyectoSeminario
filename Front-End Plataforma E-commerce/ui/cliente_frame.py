@@ -6,7 +6,6 @@ from PIL import Image
 from customtkinter import CTkImage
 import os
 
-#CARPETA_IMAGENES = "images"
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # Directorio raíz del proyecto
 CARPETA_IMAGENES = os.path.join(BASE_DIR, "images")
 

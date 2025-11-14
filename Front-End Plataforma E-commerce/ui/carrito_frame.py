@@ -135,8 +135,7 @@ class CarritoFrame(ctk.CTkFrame):
                 return
             result.update({"numero": numero, "nombre": nombre, "vencimiento": venc, "cvv": cvv, "tipo": tipo})
             top.destroy()
-
-        #tk.Button(top, text="Enviar", command=enviar).place(x=160, y=270, width=10)       
+     
         tk.Button(top, text="Enviar", font="arial 12 bold", command=enviar, fg="white", bg="#2E8B64").place(x=160, y=270, width=100) 
 
         self.wait_window(top)
