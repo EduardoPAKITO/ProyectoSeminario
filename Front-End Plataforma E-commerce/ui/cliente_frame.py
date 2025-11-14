@@ -72,8 +72,8 @@ class ClienteFrame(ctk.CTkFrame):
         self.sucursal_menu.pack(anchor="w", padx=8, pady=(0,8))
 
         # Mostrar dirección de la sucursal seleccionada
-        self.lbl_sucursal_info = ctk.CTkLabel(derecho, text="Dirección: -")
-        self.lbl_sucursal_info.pack(anchor="w", padx=8, pady=(0,6))
+        self.lbl_sucursal_info = ctk.CTkLabel(derecho, text="Dirección: -", wraplength=320, justify="left")
+        self.lbl_sucursal_info.pack(anchor="w", padx=8, pady=(2,4))
 
         ctk.CTkLabel(derecho, text="Cantidad:").pack(anchor="w", padx=8)
         self.cantidad_entry = ctk.CTkEntry(derecho, width=80)
@@ -156,7 +156,7 @@ class ClienteFrame(ctk.CTkFrame):
 
         # Actualizar posición de la grilla
         self.column += 1
-        if self.column > 3:  # 4 columnas
+        if self.column > 5:  # 6 columnas
             self.column = 0
             self.row += 1
 
