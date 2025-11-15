@@ -130,9 +130,9 @@ class App(ctk.CTk):
     def get_usuario_actual(self):
         return self.usuario_actual
 
-    # Carrito: funciones para manejar carrito desde App
+    # Carrito: funciones para manejar carrito desde main
     def agregar_al_carrito(self, item):
-        # item: dict con keys categoria, producto, cantidad, sucursal, precio_unitario, usuario
+        # item: diccionario con keys categoria, producto, cantidad, sucursal, precio_unitario, usuario
         # si ya existe mismo producto+sucursal en carrito, sumar cantidad
         found = False
         for it in self.carrito:
@@ -142,7 +142,7 @@ class App(ctk.CTk):
                 break
         if not found:
             self.carrito.append(item)
-        # refrescar vista carrito si visible
+        # refrescar vista del carrito 
         try:
             if self.frame_carrito:
                 self.frame_carrito.refrescar()
@@ -161,7 +161,6 @@ class App(ctk.CTk):
         errores = []
         total = 0.0
         productos = DataManager.cargar_productos()
-        # verificar el stock y sumar totales
         for it in carrito:
             cat = it["categoria"]
             nombre = it["producto"]
@@ -177,7 +176,6 @@ class App(ctk.CTk):
             total += prod.get("precio", 0) * cant
         if errores:
             return False, "\n".join(errores)
-        # aplicar forma de pago a total
         total_final = total
         if forma_pago == "Efectivo":
             total_final = total * 0.90

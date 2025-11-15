@@ -171,13 +171,14 @@ class ClienteFrame(ctk.CTkFrame):
         descripcion = producto.get("descripcion", "(sin descripción)")
         self.lbl_descripcion.configure(text=f"Descripción: {descripcion}")
         self.lbl_precio.configure(text=f"Precio: ${producto.get('precio'):.2f}")
-        # cargar sucursales
+        
+        #cargar sucursales
         sucursales = list(producto.get("stock_por_sucursal", {}).keys())
         # calcular el stock total en todas las sucursales
         stock_total = sum(producto.get("stock_por_sucursal", {}).values()) if sucursales else 0
         if sucursales:
             self.sucursal_menu.configure(values=sucursales)
-            # establecer primer valor si no hay seleccionado
+            #establecer el primer valor si no hay una sucursal seleccionada
             sel = sucursales[0]
             try:
                 self.sucursal_menu.set(sel)
@@ -185,7 +186,7 @@ class ClienteFrame(ctk.CTkFrame):
                 pass
             stock_s = producto.get("stock_por_sucursal", {}).get(sel, 0)
             self.lbl_stock.configure(text=f"Stock en {sel}: {stock_s}")
-            # mostrar dirección de la sucursal
+            #muestra la dirección de la sucursal
             sucursales_info = DataManager.cargar_sucursales()
             info = sucursales_info.get(sel, {})
             direccion = info.get("direccion", "(sin dirección)")
@@ -199,11 +200,9 @@ class ClienteFrame(ctk.CTkFrame):
                 pass
             self.lbl_stock.configure(text="Sin sucursales")
             self.lbl_sucursal_info.configure(text="Dirección: -")
-
         # cargar imagen ajustable
         imagen_nombre = producto.get("imagen", "")
         ruta = os.path.join(CARPETA_IMAGENES, imagen_nombre) if imagen_nombre else None
-
         if ruta and os.path.exists(ruta):
             try:
                 pil_image = Image.open(ruta)
@@ -216,7 +215,6 @@ class ClienteFrame(ctk.CTkFrame):
         else:
             self.label_imagen.configure(image=self.imagen_sin_foto, text="")
             self.label_imagen.image = self.imagen_sin_foto
-
         # almacenar selección actual
         self.seleccion_actual = {"categoria": categoria, "nombre": nombre, "producto": producto}
 

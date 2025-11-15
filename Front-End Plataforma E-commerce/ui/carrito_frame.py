@@ -151,13 +151,13 @@ class CarritoFrame(ctk.CTkFrame):
             messagebox.showwarning("Carrito", "El carrito está vacío.")
             return
         forma = self.forma.get()
-        # si tarjeta pedir datos (CTk)
+        # si tarjeta pedir datos
         if forma in ("Débito", "Crédito"):
             datos = self.pedir_datos_tarjeta()
             if not datos:
                 messagebox.showwarning("Pago", "Datos de tarjeta incompletos.")
                 return
-        # procesar compra: el callback debe intentar registrar ventas y reducir stock
+        # procesar compra: el callback debe registrar ventas y reducir stock
         ok, msg = self.procesar_compra_callback(carrito, forma)
         if ok:
             messagebox.showinfo("Compra exitosa", msg or "Compra realizada correctamente.")
