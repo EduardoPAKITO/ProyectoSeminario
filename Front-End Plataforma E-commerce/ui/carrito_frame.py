@@ -94,7 +94,6 @@ class CarritoFrame(ctk.CTkFrame):
     def pedir_datos_tarjeta(self):
         top = ctk.CTkToplevel(self)
         top.title("Datos tarjeta")
-        #top.geometry("420x320")
         top.geometry("420x360+300+150")
         top.resizable(False, False)
         top.transient(self.master)

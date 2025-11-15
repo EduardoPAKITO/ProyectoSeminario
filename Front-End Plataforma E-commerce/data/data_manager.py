@@ -21,7 +21,7 @@ class DataManager:
         os.makedirs(DataManager.CARPETA_IMAGENES, exist_ok=True)
         DataManager._asegurar_archivo_usuarios()
         # NOTA: se comenta la inicialización automática de productos para no sobreescribir productos reales
-        # DataManager._asegurar_productos_iniciales()
+        DataManager._asegurar_productos_iniciales()
         DataManager._asegurar_archivo_ventas()
         DataManager._asegurar_archivo_sucursales()
 
@@ -41,28 +41,40 @@ class DataManager:
         if not os.path.exists(DataManager.RUTA_PRODUCTOS):
             ejemplo = {
                 "Celulares": {
-                    "Teléfono Modelo A": {
-                        "id": str(uuid.uuid4()),
-                        "precio": 699.90,
-                        "imagen": "ejemplo_telefono.jpg",
-                        "descripcion": "Teléfono modelo A con buenas prestaciones.",
-                        "stock_por_sucursal": {"Sucursal Centro": 4, "Sucursal Norte": 2}
+                    "Xiaomi 15T Pro": {
+                        "id": "1879559c-9fcc-440d-bb28-e9a49781f513",
+                        "precio": 1278000,
+                        "imagen": "default.jpg",
+                        "descripcion": "Pantalla AMOLED de 6.83 pulgadas con tasa de refresco de 144Hz y está potenciado por un procesador Dimensity 9400+ con 12GB de RAM y hasta 1TB de almacenamiento no expandible.",
+                        "stock_por_sucursal": {
+                            "Sucursal Centro": 1,
+                            "Sucursal Norte": 2,
+                            "Sucursal Sur": 3
+                        }
                     }
                 },
                 "Accesorios": {
-                    "Funda Protectora": {
-                        "id": str(uuid.uuid4()),
-                        "precio": 19.90,
-                        "imagen": "ejemplo_funda.jpg",
-                        "descripcion": "Funda de silicona resistente.",
-                        "stock_por_sucursal": {"Sucursal Centro": 30, "Sucursal Sur": 20}
+                    "PS5 con lectora": {
+                        "id": "f1cf0d70-7a45-42e9-bcfa-2d742293a836",
+                        "precio": 1120000,
+                        "imagen": "ps5.jpg",
+                        "descripcion": "Alto rendimiento con gráficos 4K y un potente procesador de 8 núcleos que asegura juegos fluidos. Su control DualSense ofrece una experiencia inmersiva, cuenta con 1 TB de almacenamiento y bajo consumo energético",
+                        "stock_por_sucursal": {
+                            "Sucursal Centro": 3,
+                            "Sucursal Norte": 1,
+                            "Sucursal Sur": 4
+                        }
                     },
-                    "Cargador Rápido 30W": {
-                        "id": str(uuid.uuid4()),
-                        "precio": 29.50,
-                        "imagen": "ejemplo_cargador.jpg",
-                        "descripcion": "Cargador rápido compatible con la mayoría de modelos.",
-                        "stock_por_sucursal": {"Sucursal Norte": 15, "Sucursal Sur": 10}
+                    "Joystick PS5": {
+                        "id": "f1cf0d70-7a45-42e9-bcfa-2d742293a837",
+                        "precio": 160000,
+                        "imagen": "mando.jpg",
+                        "descripcion": "Control inalámbrico DualSense para PS5, con hápticos, gatillos adaptativos y micrófono integrado.",
+                        "stock_por_sucursal": {
+                            "Sucursal Centro": 2,
+                            "Sucursal Norte": 0,
+                            "Sucursal Sur": 5
+                        }
                     }
                 }
             }
@@ -80,8 +92,8 @@ class DataManager:
         # Nuevo archivo para guardar sucursales con dirección y teléfono
         if not os.path.exists(DataManager.RUTA_SUCURSALES):
             ejemplo = {
-                "Sucursal Centro": {"direccion": "Av. Principal 123", "telefono": "000-000"},
-                "Sucursal Norte": {"direccion": "Ruta 9 km 10", "telefono": "111-111"}
+                "Sucursal Centro": {"direccion": "Gral. Balcarce 367, SS. de Jujuy", "telefono": "388-1234567"},
+                "Sucursal Norte": {"direccion": "Gral. Belgrano 400, SS. de Jujuy", "telefono": "388-7654321"}
             }
             with open(DataManager.RUTA_SUCURSALES, "w", encoding="utf-8") as f:
                 json.dump(ejemplo, f, indent=2, ensure_ascii=False)
