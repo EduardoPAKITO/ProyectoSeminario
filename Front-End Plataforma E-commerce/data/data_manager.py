@@ -20,7 +20,6 @@ class DataManager:
         os.makedirs(DataManager.DATA_DIR, exist_ok=True)
         os.makedirs(DataManager.CARPETA_IMAGENES, exist_ok=True)
         DataManager._asegurar_archivo_usuarios()
-        # NOTA: se comenta la inicialización automática de productos para no sobreescribir productos reales
         DataManager._asegurar_productos_iniciales()
         DataManager._asegurar_archivo_ventas()
         DataManager._asegurar_archivo_sucursales()
