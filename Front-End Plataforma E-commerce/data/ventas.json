@@ -1,44 +1,22 @@
 {
-  "eduardo": [
+  "rolon": [
     {
-      "categoria": "Celulares",
-      "producto": "Teléfono Modelo A",
+      "categoria": "Accesorios",
+      "producto": "Joystick PS5",
       "cantidad": 1,
       "sucursal": "Sucursal Centro",
-      "metodo_pago": "contado",
-      "total": 699.9,
-      "fecha": "2025-11-06 21:00:59"
+      "metodo_pago": "Efectivo",
+      "total": 144000.0,
+      "fecha": "2025-11-16 16:34:50"
     },
     {
-      "categoria": "Celulares",
-      "producto": "Teléfono Modelo A",
+      "categoria": "Accesorios",
+      "producto": "PS5 con lectora",
       "cantidad": 1,
       "sucursal": "Sucursal Centro",
-      "metodo_pago": "contado",
-      "total": 699.9,
-      "fecha": "2025-11-06 21:09:46"
-    }
-  ],
-  "cliente": [
-    {
-      "categoria": "Celulares",
-      "producto": "Teléfono Modelo A",
-      "cantidad": 1,
-      "sucursal": "Sucursal Norte",
-      "metodo_pago": "credito",
-      "total": 699.9,
-      "fecha": "2025-11-07 21:47:49"
-    }
-  ],
-  "misa": [
-    {
-      "categoria": "Celulares",
-      "producto": "Teléfono Modelo B",
-      "cantidad": 1,
-      "sucursal": "Sucursal Centro",
-      "metodo_pago": "efectivo",
-      "total": 699.9,
-      "fecha": "2025-11-11 01:38:15"
+      "metodo_pago": "Efectivo",
+      "total": 1008000.0,
+      "fecha": "2025-11-16 16:34:50"
     }
   ]
 }
