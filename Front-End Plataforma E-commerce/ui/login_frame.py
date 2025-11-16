@@ -1,7 +1,7 @@
 # login_frame.py
 import customtkinter as ctk
 from data.data_manager import DataManager
-from tkinter import messagebox, simpledialog
+from tkinter import messagebox
 
 class LoginFrame(ctk.CTkFrame):
     def __init__(self, master, funcion_on_login, *args, **kwargs):
@@ -10,7 +10,7 @@ class LoginFrame(ctk.CTkFrame):
         self._construir()
 
     def _construir(self):
-        self.grid_columnconfigure((0,1), weight=1) #estaba (0,1,2) tres columnas
+        self.grid_columnconfigure((0,1), weight=1) 
         titulo = ctk.CTkLabel(self, text="Iniciar sesión", font=ctk.CTkFont(size=22, weight="bold"))
         titulo.grid(row=0, column=0, columnspan=3, pady=(80,10)) #(60,10)
 
@@ -38,7 +38,7 @@ class LoginFrame(ctk.CTkFrame):
             messagebox.showwarning("Datos incompletos", "Ingrese usuario y clave.")
             return
         usuarios = DataManager.cargar_usuarios()
-        info = usuarios.get(usuario) #Busca por la clave y devuelve su valor (xq es un diccionario)
+        info = usuarios.get(usuario) #Busca por la clave y devuelve su valor 
         if not info or info.get("clave") != clave:
             messagebox.showerror("Error", "Usuario o clave incorrectos.")
             return
