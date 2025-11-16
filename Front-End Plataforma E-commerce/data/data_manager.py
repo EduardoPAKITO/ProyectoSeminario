@@ -12,9 +12,10 @@ class DataManager:
         RUTA_USUARIOS (str): Ruta al archivo CSV de usuarios
         RUTA_PRODUCTOS (str): Ruta al archivo JSON de productos
         RUTA_VENTAS (str): Ruta al archivo JSON de ventas
+        RUTA_SUCURSALES (str): Ruta al archivo JSON de sucursales
         CARPETA_IMAGENES (str): Ruta a la carpeta de imágenes
     """""
-    # Rutas CORREGIDAS - relativas al directorio del proyecto
+
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # Directorio raíz del proyecto
     DATA_DIR = os.path.join(BASE_DIR, "data")
     RUTA_USUARIOS = os.path.join(DATA_DIR, "usuarios.csv")
@@ -29,8 +30,7 @@ class DataManager:
         os.makedirs(DataManager.DATA_DIR, exist_ok=True)
         os.makedirs(DataManager.CARPETA_IMAGENES, exist_ok=True)
         DataManager._asegurar_archivo_usuarios()
-        # NOTA: se comenta la inicialización automática de productos para no sobreescribir productos reales
-        # DataManager._asegurar_productos_iniciales()
+        DataManager._asegurar_productos_iniciales()
         DataManager._asegurar_archivo_ventas()
         DataManager._asegurar_archivo_sucursales()
 
@@ -45,38 +45,9 @@ class DataManager:
 
     @staticmethod
     def _asegurar_productos_iniciales():
-        # Esta función crea un productos.json de ejemplo. Se dejó implementada por compatibilidad,
-        # pero su llamado fue comentado en asegurar_archivos() para evitar sobreescribir datos reales.
         if not os.path.exists(DataManager.RUTA_PRODUCTOS):
-            ejemplo = {
-                "Celulares": {
-                    "Teléfono Modelo A": {
-                        "id": str(uuid.uuid4()),
-                        "precio": 699.90,
-                        "imagen": "ejemplo_telefono.jpg",
-                        "descripcion": "Teléfono modelo A con buenas prestaciones.",
-                        "stock_por_sucursal": {"Sucursal Centro": 4, "Sucursal Norte": 2}
-                    }
-                },
-                "Accesorios": {
-                    "Funda Protectora": {
-                        "id": str(uuid.uuid4()),
-                        "precio": 19.90,
-                        "imagen": "ejemplo_funda.jpg",
-                        "descripcion": "Funda de silicona resistente.",
-                        "stock_por_sucursal": {"Sucursal Centro": 30, "Sucursal Sur": 20}
-                    },
-                    "Cargador Rápido 30W": {
-                        "id": str(uuid.uuid4()),
-                        "precio": 29.50,
-                        "imagen": "ejemplo_cargador.jpg",
-                        "descripcion": "Cargador rápido compatible con la mayoría de modelos.",
-                        "stock_por_sucursal": {"Sucursal Norte": 15, "Sucursal Sur": 10}
-                    }
-                }
-            }
             with open(DataManager.RUTA_PRODUCTOS, "w", encoding="utf-8") as f:
-                json.dump(ejemplo, f, indent=2, ensure_ascii=False)
+                json.dump({}, f, indent=2, ensure_ascii=False)
 
     @staticmethod
     def _asegurar_archivo_ventas():
@@ -86,14 +57,9 @@ class DataManager:
 
     @staticmethod
     def _asegurar_archivo_sucursales():
-        # Nuevo archivo para guardar sucursales con dirección y teléfono
         if not os.path.exists(DataManager.RUTA_SUCURSALES):
-            ejemplo = {
-                "Sucursal Centro": {"direccion": "Av. Principal 123", "telefono": "000-000"},
-                "Sucursal Norte": {"direccion": "Ruta 9 km 10", "telefono": "111-111"}
-            }
             with open(DataManager.RUTA_SUCURSALES, "w", encoding="utf-8") as f:
-                json.dump(ejemplo, f, indent=2, ensure_ascii=False)
+                json.dump({}, f, indent=2, ensure_ascii=False)
 
     # Métodos para usuarios
     @staticmethod
@@ -137,7 +103,7 @@ class DataManager:
                 return False, "Ya existe una cuenta con el mismo nombre."
         usuarios[usuario] = {"clave": clave, "rol": "cliente", "email": email, "nombre": nombre}
         DataManager.guardar_usuarios(usuarios)
-        return True, "Usuario cliente creado correctamente."
+        return True, "Usuario creado correctamente."
 
     # Métodos para productos y sucursales
     @staticmethod
