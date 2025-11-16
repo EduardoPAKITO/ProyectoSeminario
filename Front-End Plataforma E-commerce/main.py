@@ -27,7 +27,7 @@ class App(ctk.CTk):
         # header
         header = ctk.CTkFrame(self)
         header.pack(fill="x", padx=8, pady=6)
-        self.lbl_titulo = ctk.CTkLabel(header, text="Tienda - Los Pibes de Seminario", font=ctk.CTkFont(size=18, weight="bold"))
+        self.lbl_titulo = ctk.CTkLabel(header, text="TIENDATECNO", font=ctk.CTkFont(size=18, weight="bold"))
         self.lbl_titulo.pack(side="left", padx=8)
         self.lbl_sesion = ctk.CTkLabel(header, text="No conectado")
         self.lbl_sesion.pack(side="left", padx=8)
@@ -57,7 +57,7 @@ class App(ctk.CTk):
         self.lbl_sesion.configure(text=f"Conectado: {usuario} ({rol})")
         self.btn_logout.configure(state="normal")
 
-        # Crear pestañas (usamos CTkTabview)
+        # Crear pestañas
         self.tabview = ctk.CTkTabview(self.contenedor_principal)
         self.tabview.pack(fill="both", expand=True)
         # Siempre: Catálogo; si cliente: Carrito y Mi Perfil; si admin: Administracion
