@@ -15,7 +15,7 @@ class ClienteFrame(ctk.CTkFrame):
     def __init__(self, master, funcion_get_usuario, add_to_cart_callback=None, role="cliente", *args, **kwargs):
         super().__init__(master, *args, **kwargs)
         self.funcion_get_usuario = funcion_get_usuario
-        self.add_to_cart_callback = add_to_cart_callback  # callback para agregar al carrito en App
+        self.add_to_cart_callback = add_to_cart_callback  # callback para agregar al carrito en el main
         self.role = role
         self.productos_mostrados = []  # lista de tuples (categoria, nombre, datos)
         self.imagen_actual = None
@@ -160,7 +160,7 @@ class ClienteFrame(ctk.CTkFrame):
         # Precio
         ctk.CTkLabel(article_frame, text=f"Precio: ${precio:.2f}", text_color="black").pack()
         # Stock
-        ctk.CTkLabel(article_frame, text=f"Stock total: {stock}", text_color="gray").pack(pady=(0, 4))
+        ctk.CTkLabel(article_frame, text=f"Stock total: {stock}", text_color="black").pack(pady=(0, 4))
 
         # Actualizar posición de la grilla
         self.column += 1
@@ -287,7 +287,7 @@ class ClienteFrame(ctk.CTkFrame):
         if cantidad > stock_disponible:
             messagebox.showerror("Stock insuficiente", f"Solo hay {stock_disponible} unidades en {sucursal}.")
             return
-        # llamar callback para agregar al carrito en App (si existe)
+        # llamar callback para agregar al carrito en el main (si existe)
         if self.add_to_cart_callback:
             self.add_to_cart_callback({
                 "usuario": usuario,
