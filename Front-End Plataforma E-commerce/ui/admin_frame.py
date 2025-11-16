@@ -36,18 +36,16 @@ class AdminFrame(ctk.CTkFrame):
         self.usuarios_box = ctk.CTkTextbox(izquierda, height=200, state="disabled")
         self.usuarios_box.pack(fill="both", expand=False, padx=6, pady=6)
         btns_u = ctk.CTkFrame(izquierda)
-        btns_u.pack(fill="x", padx=6, pady=6)
-        # SE QUITA boton Agregar cliente 
+        btns_u.pack(fill="x", padx=6, pady=6) 
         ctk.CTkButton(btns_u, text="Eliminar usuario", command=self.eliminar_usuario).pack(side="left", padx=6)
         #ctk.CTkButton(btns_u, text="Refrescar", command=self.refrescar_usuarios).pack(side="right", padx=6)
         ctk.CTkButton(btns_u, image=refresh_img, text="", width=30, height=30,command=self.refrescar_usuarios).pack(side="right", padx=6)
 
         ctk.CTkLabel(izquierda, text="Sucursales", font=ctk.CTkFont(size=14, weight="bold")).pack(anchor="w", padx=6, pady=(12,2))
         # Ajuste: altura reducida para que los botones no se oculten
-        self.sucursales_box = ctk.CTkTextbox(izquierda, height=100, state="disabled")
+        self.sucursales_box = ctk.CTkTextbox(izquierda, height=130, state="disabled")
         self.sucursales_box.pack(fill="both", padx=6, pady=(6, 4))
 
-        # Aseguramos que el frame de botones se vea siempre
         btns_s = ctk.CTkFrame(izquierda)
         btns_s.pack(fill="x", padx=6, pady=(0, 6))
 
@@ -300,7 +298,7 @@ class AdminFrame(ctk.CTkFrame):
         tk.Button(top, text="Eliminar", font="arial 12 bold", command=eliminar, fg="white", bg="#2E8B64").place(x=150, y=180, width=150, height=40)
         tk.Button(top, text="Cancelar", font="arial 12 bold", command=top.destroy, fg="white", bg="#2E8B64").place(x=350, y=180, width=150, height=40)
 
-    # Productos (resto del archivo sin cambios funcionales importantes)
+    # Productos 
     def load_image(self):
         file_path = filedialog.askopenfilename()
         if file_path:
