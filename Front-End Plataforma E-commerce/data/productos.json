@@ -162,7 +162,7 @@
       "imagen": "ps5.jpg",
       "descripcion": "Alto rendimiento con gráficos 4K y un potente procesador de 8 núcleos que asegura juegos fluidos. Su control DualSense ofrece una experiencia inmersiva, cuenta con 1 TB de almacenamiento y bajo consumo energético",
       "stock_por_sucursal": {
-        "Sucursal Centro": 3,
+        "Sucursal Centro": 2,
         "Sucursal Norte": 1,
         "Sucursal Sur": 4
       }
@@ -173,7 +173,7 @@
       "imagen": "mando.jpg",
       "descripcion": "Control inalámbrico DualSense para PS5, con hápticos, gatillos adaptativos y micrófono integrado.",
       "stock_por_sucursal": {
-        "Sucursal Centro": 2,
+        "Sucursal Centro": 1,
         "Sucursal Norte": 0,
         "Sucursal Sur": 5
       }
