@@ -38,7 +38,6 @@ class AdminFrame(ctk.CTkFrame):
         btns_u = ctk.CTkFrame(izquierda)
         btns_u.pack(fill="x", padx=6, pady=6) 
         ctk.CTkButton(btns_u, text="Eliminar usuario", command=self.eliminar_usuario).pack(side="left", padx=6)
-        #ctk.CTkButton(btns_u, text="Refrescar", command=self.refrescar_usuarios).pack(side="right", padx=6)
         ctk.CTkButton(btns_u, image=refresh_img, text="", width=30, height=30,command=self.refrescar_usuarios).pack(side="right", padx=6)
 
         ctk.CTkLabel(izquierda, text="Sucursales", font=ctk.CTkFont(size=14, weight="bold")).pack(anchor="w", padx=6, pady=(12,2))
@@ -52,7 +51,6 @@ class AdminFrame(ctk.CTkFrame):
         ctk.CTkButton(btns_s, text="Agregar sucursal", command=self.agregar_sucursal).pack(side="left", padx=4)
         ctk.CTkButton(btns_s, text="Editar sucursal", command=self.editar_sucursal).pack(side="left", padx=4)
         ctk.CTkButton(btns_s, text="Eliminar sucursal", command=self.eliminar_sucursal).pack(side="left", padx=4)
-        #ctk.CTkButton(btns_s, text="Refrescar", command=self.refrescar_sucursales).pack(side="right", padx=4)
         ctk.CTkButton(btns_s, image=refresh_img, text="", width=30, height=30,command=self.refrescar_sucursales).pack(side="right", padx=4)
 
         # Derecha: productos (separados por categoría)
@@ -66,7 +64,6 @@ class AdminFrame(ctk.CTkFrame):
         ctk.CTkButton(btns_p, text="Agregar producto", command=self.agregar_producto).pack(side="left", padx=6)
         ctk.CTkButton(btns_p, text="Editar stock", command=self.editar_stock).pack(side="left", padx=6)
         ctk.CTkButton(btns_p, text="Eliminar producto", command=self.eliminar_producto).pack(side="left", padx=6)
-        #ctk.CTkButton(btns_p, text="Refrescar", command=self.refrescar_todo).pack(side="right", padx=6)
         ctk.CTkButton(btns_p, image=refresh_img, text="", width=30, height=30,command=self.refrescar_todo).pack(side="right", padx=6)
 
         self.refrescar_todo()
